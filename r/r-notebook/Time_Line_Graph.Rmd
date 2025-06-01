@@ -1,0 +1,210 @@
+---
+title: "Create Time Lines Plot"
+output:
+  html_document:
+    df_print: paged
+---
+
+This notebook will create a timeline plot showing the use of the 3 CDK4/6 inhibitors over time, with key timeline events highlighted.
+
+```{r message=FALSE, warning=FALSE}
+# load some required packages for data carpentry and visualisation
+require(dplyr)
+require(tidyr)
+
+# Get the dataset 
+# Requires cleaned data
+cdk46Data <- readRDS(here::here("data/cdk46_op_hosp_clean.RDS"))
+
+# agregate the data to VTM & month (i.e. no trust level data needed or formulation)
+cdk46Data |>
+  # get the VTM (ingredient)
+  separate_wider_delim(vmp_name, delim=" ", names = c("VTM", "strength", "form")) |>
+  # summarise the data using month and VTM
+  group_by(year_month, VTM) |>
+  summarise(ddd=sum(ddd_quantity)) -> cdk46MonthlyData
+
+head(cdk46MonthlyData)
+```
+
+## Create an initial verson of the graph
+
+```{r}
+require(ggplot2)
+
+cdk46MonthlyData |>
+  ggplot(aes(
+         x=year_month,
+         y=ddd,
+         colour = VTM
+       )) +
+  geom_line(lwd=1.1) +
+  theme_classic()
+```
+
+### Create a smoother version
+The data is quite spikey and might be better shown as a moving average over 3 months
+
+```{r}
+require(zoo) # for rolling averages...
+
+cdk46MonthlyData |>
+  #filter(VTM == "Palbociclib") |>
+  ungroup() |>
+  group_by(VTM) |>
+  mutate(moving_av = rollmean(ddd, k = 3, fill = ddd, align = "right")) |>
+  ggplot(aes(
+         x=year_month,
+         y=moving_av,
+         colour = VTM
+       )) +
+  geom_line(lwd=1.1) +
+  theme_classic()
+```
+This uses right moving average and results in the first 3 data points being lower than they should perhaps be.  It doesn't do much to smooth out the Palbociclib spike.
+
+### Format the Graph
+
+```{r}
+require(ggsci) # will apply journal colour scheme
+cdk46MonthlyData |>
+  ggplot(aes(
+         x=year_month,
+         y=ddd,
+         colour = VTM
+       )) +
+  geom_line(lwd=1.1) +
+  theme_classic() +
+  scale_color_jama()-> cdk46Plot
+
+cdk46Plot +
+  # Title the plot and add a caption with DDD
+  labs(title = "Trends in CDK4/6 inhibitor prescribing in England",
+         subtitle = "Issue of defined daily doses from hospital pharmacies per month",
+         caption = "Defined daily dose: Abemaciclib 300mg, Palbociclib 94mg, Ribociclib 450mg") +
+  
+  # Explain missing data
+  annotate("label", x = as.Date("2018-07-01"), 
+                 y = 120000, 
+                 label = "Data prior to\n2019 is\nnot available", 
+            hjust = 0.5, vjust = 1, size = 3
+            ) +
+  # Force x axis to show wider timeline, and better break points
+  scale_x_date("Month",
+                     limits = c(as.Date("2017-06-01"), as.Date("2026-03-01")), 
+                     date_breaks = "1 year",
+                     #date_minor_breaks = "0.5 year",
+                     date_labels = "%Y",
+               ) +
+  
+  # Format the y-axis scales and set a better range
+    # Tidy up the y-axis
+  scale_y_continuous("Monthly defined daily doses",
+                     labels = scales::label_comma(), # Add commas to numbers
+                     limits = c(0, 200000), 
+                     breaks = seq(0, 200000, by = 50000))+
+  
+  # Label x-axis
+  xlab("Month")  -> cdk46Plot
+
+print(cdk46Plot)
+
+```
+
+### Try adding a grid
+
+```{r}
+
+cdk46Plot +
+  theme_bw() -> cdk46Plot
+
+print(cdk46Plot)
+```
+
+
+### Remove the legend and label the lines
+
+```{r}
+require(directlabels)
+
+cdk46Plot +
+  theme(legend.position = "none") +
+  geom_dl(aes(label = VTM), method = "last.points")  -> cdk46Plot
+
+print(cdk46Plot)
+```
+
+## Build some labels for the graph
+
+```{r}
+KeyDates <- readr::read_csv(here::here("data/KeyDates.csv")) |>
+  mutate(date = as.Date(date, format = "%d/%m/%Y")) 
+
+head(KeyDates)
+
+```
+
+### Add the labels to the graph
+
+```{r}
+require(ggalt)
+
+
+cdk46Plot +
+# plot all the vertical marker lines
+  geom_segment(data=KeyDates, 
+               aes(x=as.Date(date), xend=as.Date(date), y = 0, yend= marker, colour=VTM),
+               lwd=0.8, lty=5) +
+# plot all the left horizontal marker lines
+  geom_segment(data=filter(KeyDates, text_pos == "left"), 
+               aes(x=as.Date(date), xend=as.Date(date)-60, y = marker, yend= marker, colour=VTM),
+               lwd=0.8, lty=5) +
+# plot all the right horizontal marker lines
+  geom_segment(data=filter(KeyDates, text_pos == "right"), 
+               aes(x=as.Date(date), xend=as.Date(date)+60, y = marker, yend= marker, colour=VTM),
+               lwd=0.8, lty=5) +
+# plot all the top horizontal marker lines
+  geom_segment(data=filter(KeyDates, text_pos == "above"), 
+               aes(x=as.Date(date)-30, xend=as.Date(date)+30, y = marker, yend= marker,
+                   colour=VTM), lwd=0.8, lty=5)  +
+# plot all the left text
+  geom_text(data=filter(KeyDates, text_pos == "left"), 
+               aes(x=as.Date(date) - 65, y = marker, colour=VTM, 
+                   label = stringr::str_wrap(event, 12)), 
+            size = 2.7, hjust = 1) +
+# plot all the right text
+  geom_text(data=filter(KeyDates, text_pos == "right"), 
+               aes(x=as.Date(date) + 65, y = marker, colour=VTM, 
+                   label = stringr::str_wrap(event, 12)), 
+            size = 2.7, hjust = 0) +
+# plot all the above text
+  geom_text(data=filter(KeyDates, text_pos == "above"), 
+               aes(x=as.Date(date), y = marker+5000, colour=VTM, 
+                   label = stringr::str_wrap(event, 12)), 
+            size = 2.7, hjust = 0.5, vjust = 0) -> cdk46Plot
+
+print(cdk46Plot)
+
+```
+## Journal specifics
+It looks like JAMA don't use a grid on their plots, but do use horizontal grid lines for major axis ticks
+
+```{r}
+cdk46Plot +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank()) +
+  theme(panel.border = element_blank(),
+        axis.line = element_line(linewidth = 0.5, colour = "black") ) ->cdk46Plot
+
+print(cdk46Plot)
+```
+
+
+## Export plot for Journal
+
+```{r}
+ggsave(here::here("r/outputs/TimeLineFigure.svg"), cdk46Plot, width = 8, height =6)
+ggsave(here::here("r/outputs/TimeLineFigure.png"), cdk46Plot, dpi = 350, width = 8, height =6)
+```
+
+
