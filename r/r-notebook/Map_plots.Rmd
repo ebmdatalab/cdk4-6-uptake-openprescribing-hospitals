@@ -1,0 +1,39 @@
+---
+title: "Maps Plot"
+output:
+  html_document:
+    df_print: paged
+---
+
+This notebook will create cancer alliance plots comparing palbociclib and ribociclib use.
+
+
+
+## Load the data
+
+```{r message=FALSE, warning=FALSE}
+# load some required packages for data carpentry and visualisation
+require(dplyr)
+require(tidyr)
+require(ggplot2)
+
+# Get the dataset 
+# Requires cleaned data
+cdk46Data <- readRDS(here::here("data/cdk46_op_hosp_clean.RDS"))
+
+# agregate the data to VTM & month & trust
+cdk46Data |>
+  # exclude dates in 2025
+  filter(year_month < as.Date("2025-01-01")) |>
+  # get the VTM (ingredient)
+  separate_wider_delim(vmp_name, delim=" ", names = c("VTM", "strength", "form")) |>
+  # remove anything that isn't abema
+  filter(VTM == "Abemaciclib") |>
+  # summarise the data using month and organisation
+  group_by(year_month, VTM, new_code ) |>
+  # As not comparing across drugs - can simply use quantity rather than dose
+  summarise(qty=sum(quantity)) -> abemaData
+
+head(abemaData)
+```
+
