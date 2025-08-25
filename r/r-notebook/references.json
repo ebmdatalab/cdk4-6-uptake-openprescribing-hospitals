@@ -1,0 +1,527 @@
+[
+    {
+        "URL": "https://www.nice.org.uk/guidance/ta579",
+        "id": "abemacic2019",
+        "issued": {
+            "date-parts": [
+                [
+                    2019,
+                    5
+                ]
+            ]
+        },
+        "key": "5HW7PN8Z",
+        "libraryid": "1",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "publisher": "NICE",
+        "title": "Abemaciclib with fulvestrant for treating hormone receptor-positive, HER2-negative advanced breast cancer after endocrine therapy",
+        "title-short": "TA570",
+        "type": "article"
+    },
+    {
+        "DOI": "10.1200/jco.2017.75.6155",
+        "ISSN": "0732-183X",
+        "URL": "http://dx.doi.org/10.1200/JCO.2017.75.6155",
+        "author": [
+            {
+                "family": "Goetz",
+                "given": "Matthew P."
+            },
+            {
+                "family": "Toi",
+                "given": "Masakazu"
+            },
+            {
+                "family": "Campone",
+                "given": "Mario"
+            },
+            {
+                "family": "Sohn",
+                "given": "Joohyuk"
+            },
+            {
+                "family": "Paluch-Shimon",
+                "given": "Shani"
+            },
+            {
+                "family": "Huober",
+                "given": "Jens"
+            },
+            {
+                "family": "Park",
+                "given": "In Hae"
+            },
+            {
+                "family": "Trédan",
+                "given": "Olivier"
+            },
+            {
+                "family": "Chen",
+                "given": "Shin-Cheh"
+            },
+            {
+                "family": "Manso",
+                "given": "Luis"
+            },
+            {
+                "family": "Freedman",
+                "given": "Orit C."
+            },
+            {
+                "family": "Garnica Jaliffe",
+                "given": "Georgina"
+            },
+            {
+                "family": "Forrester",
+                "given": "Tammy"
+            },
+            {
+                "family": "Frenzel",
+                "given": "Martin"
+            },
+            {
+                "family": "Barriga",
+                "given": "Susana"
+            },
+            {
+                "family": "Smith",
+                "given": "Ian C."
+            },
+            {
+                "family": "Bourayou",
+                "given": "Nawel"
+            },
+            {
+                "family": "Di Leo",
+                "given": "Angelo"
+            }
+        ],
+        "container-title": "Journal of Clinical Oncology",
+        "container-title-short": "JCO",
+        "id": "goetz2017",
+        "is-referenced-by-count": "1345",
+        "issue": "32",
+        "issued": {
+            "date-parts": [
+                [
+                    2017,
+                    11,
+                    10
+                ]
+            ]
+        },
+        "language": "en",
+        "member": "233",
+        "page": "3638-3646",
+        "prefix": "10.1200",
+        "providerkey": "doi",
+        "publisher": "American Society of Clinical Oncology (ASCO)",
+        "reference-count": "23",
+        "references-count": "23",
+        "score": "1",
+        "source": "Crossref",
+        "title": "MONARCH 3: Abemaciclib As Initial Therapy for Advanced Breast Cancer",
+        "type": "article-journal",
+        "update-policy": "http://dx.doi.org/10.1200/crossmark",
+        "volume": "35"
+    },
+    {
+        "DOI": "10.1016/j.annonc.2024.04.013",
+        "ISSN": "0923-7534",
+        "URL": "http://dx.doi.org/10.1016/j.annonc.2024.04.013",
+        "author": [
+            {
+                "family": "Goetz",
+                "given": "M.P."
+            },
+            {
+                "family": "Toi",
+                "given": "M."
+            },
+            {
+                "family": "Huober",
+                "given": "J."
+            },
+            {
+                "family": "Sohn",
+                "given": "J."
+            },
+            {
+                "family": "Trédan",
+                "given": "O."
+            },
+            {
+                "family": "Park",
+                "given": "I.H."
+            },
+            {
+                "family": "Campone",
+                "given": "M."
+            },
+            {
+                "family": "Chen",
+                "given": "S.-C."
+            },
+            {
+                "family": "Manso",
+                "given": "L.M."
+            },
+            {
+                "family": "Paluch-Shimon",
+                "given": "S."
+            },
+            {
+                "family": "Freedman",
+                "given": "O.C."
+            },
+            {
+                "family": "O’Shaughnessy",
+                "given": "J."
+            },
+            {
+                "family": "Pivot",
+                "given": "X."
+            },
+            {
+                "family": "Tolaney",
+                "given": "S.M."
+            },
+            {
+                "family": "Hurvitz",
+                "given": "S.A."
+            },
+            {
+                "family": "Llombart-Cussac",
+                "given": "A."
+            },
+            {
+                "family": "André",
+                "given": "V."
+            },
+            {
+                "family": "Saha",
+                "given": "A."
+            },
+            {
+                "family": "Hal",
+                "given": "G.",
+                "non-dropping-particle": "van"
+            },
+            {
+                "family": "Shahir",
+                "given": "A."
+            },
+            {
+                "family": "Iwata",
+                "given": "H."
+            },
+            {
+                "family": "Johnston",
+                "given": "S.R.D."
+            }
+        ],
+        "container-title": "Annals of Oncology",
+        "container-title-short": "Annals of Oncology",
+        "id": "goetz2024a",
+        "is-referenced-by-count": "93",
+        "issue": "8",
+        "issued": {
+            "date-parts": [
+                [
+                    2024,
+                    8
+                ]
+            ]
+        },
+        "language": "en",
+        "member": "78",
+        "page": "718-727",
+        "prefix": "10.1016",
+        "providerkey": "doi",
+        "publisher": "Elsevier BV",
+        "reference-count": "25",
+        "references-count": "25",
+        "score": "1",
+        "source": "Crossref",
+        "title": "Abemaciclib plus a nonsteroidal aromatase inhibitor as initial therapy for HR+, HER2− advanced breast cancer: final overall survival results of MONARCH 3",
+        "type": "article-journal",
+        "update-policy": "https://doi.org/10.1016/elsevier_cm_policy",
+        "volume": "35"
+    },
+    {
+        "DOI": "10.1056/nejmoa1607303",
+        "ISSN": "0028-4793",
+        "URL": "http://dx.doi.org/10.1056/NEJMoa1607303",
+        "author": [
+            {
+                "family": "Finn",
+                "given": "Richard S."
+            },
+            {
+                "family": "Martin",
+                "given": "Miguel"
+            },
+            {
+                "family": "Rugo",
+                "given": "Hope S."
+            },
+            {
+                "family": "Jones",
+                "given": "Stephen"
+            },
+            {
+                "family": "Im",
+                "given": "Seock-Ah"
+            },
+            {
+                "family": "Gelmon",
+                "given": "Karen"
+            },
+            {
+                "family": "Harbeck",
+                "given": "Nadia"
+            },
+            {
+                "family": "Lipatov",
+                "given": "Oleg N."
+            },
+            {
+                "family": "Walshe",
+                "given": "Janice M."
+            },
+            {
+                "family": "Moulder",
+                "given": "Stacy"
+            },
+            {
+                "family": "Gauthier",
+                "given": "Eric"
+            },
+            {
+                "family": "Lu",
+                "given": "Dongrui R."
+            },
+            {
+                "family": "Randolph",
+                "given": "Sophia"
+            },
+            {
+                "family": "Diéras",
+                "given": "Véronique"
+            },
+            {
+                "family": "Slamon",
+                "given": "Dennis J."
+            }
+        ],
+        "container-title": "New England Journal of Medicine",
+        "container-title-short": "N Engl J Med",
+        "id": "finn2016",
+        "is-referenced-by-count": "2240",
+        "issue": "20",
+        "issued": {
+            "date-parts": [
+                [
+                    2016,
+                    11,
+                    17
+                ]
+            ]
+        },
+        "language": "en",
+        "member": "150",
+        "page": "1925-1936",
+        "prefix": "10.1056",
+        "providerkey": "doi",
+        "publisher": "Massachusetts Medical Society",
+        "reference-count": "12",
+        "references-count": "12",
+        "score": "1",
+        "source": "Crossref",
+        "title": "Palbociclib and Letrozole in Advanced Breast Cancer",
+        "type": "article-journal",
+        "volume": "375"
+    },
+    {
+        "DOI": "10.1056/nejmoa1609709",
+        "ISSN": "0028-4793",
+        "URL": "http://dx.doi.org/10.1056/NEJMoa1609709",
+        "author": [
+            {
+                "family": "Hortobagyi",
+                "given": "Gabriel N."
+            },
+            {
+                "family": "Stemmer",
+                "given": "Salomon M."
+            },
+            {
+                "family": "Burris",
+                "given": "Howard A."
+            },
+            {
+                "family": "Yap",
+                "given": "Yoon-Sim"
+            },
+            {
+                "family": "Sonke",
+                "given": "Gabe S."
+            },
+            {
+                "family": "Paluch-Shimon",
+                "given": "Shani"
+            },
+            {
+                "family": "Campone",
+                "given": "Mario"
+            },
+            {
+                "family": "Blackwell",
+                "given": "Kimberly L."
+            },
+            {
+                "family": "André",
+                "given": "Fabrice"
+            },
+            {
+                "family": "Winer",
+                "given": "Eric P."
+            },
+            {
+                "family": "Janni",
+                "given": "Wolfgang"
+            },
+            {
+                "family": "Verma",
+                "given": "Sunil"
+            },
+            {
+                "family": "Conte",
+                "given": "Pierfranco"
+            },
+            {
+                "family": "Arteaga",
+                "given": "Carlos L."
+            },
+            {
+                "family": "Cameron",
+                "given": "David A."
+            },
+            {
+                "family": "Petrakova",
+                "given": "Katarina"
+            },
+            {
+                "family": "Hart",
+                "given": "Lowell L."
+            },
+            {
+                "family": "Villanueva",
+                "given": "Cristian"
+            },
+            {
+                "family": "Chan",
+                "given": "Arlene"
+            },
+            {
+                "family": "Jakobsen",
+                "given": "Erik"
+            },
+            {
+                "family": "Nusch",
+                "given": "Arnd"
+            },
+            {
+                "family": "Burdaeva",
+                "given": "Olga"
+            },
+            {
+                "family": "Grischke",
+                "given": "Eva-Maria"
+            },
+            {
+                "family": "Alba",
+                "given": "Emilio"
+            },
+            {
+                "family": "Wist",
+                "given": "Erik"
+            },
+            {
+                "family": "Marschner",
+                "given": "Norbert"
+            },
+            {
+                "family": "Favret",
+                "given": "Anne M."
+            },
+            {
+                "family": "Yardley",
+                "given": "Denise"
+            },
+            {
+                "family": "Bachelot",
+                "given": "Thomas"
+            },
+            {
+                "family": "Tseng",
+                "given": "Ling-Ming"
+            },
+            {
+                "family": "Blau",
+                "given": "Sibel"
+            },
+            {
+                "family": "Xuan",
+                "given": "Fengjuan"
+            },
+            {
+                "family": "Souami",
+                "given": "Farida"
+            },
+            {
+                "family": "Miller",
+                "given": "Michelle"
+            },
+            {
+                "family": "Germa",
+                "given": "Caroline"
+            },
+            {
+                "family": "Hirawat",
+                "given": "Samit"
+            },
+            {
+                "family": "O’Shaughnessy",
+                "given": "Joyce"
+            }
+        ],
+        "container-title": "New England Journal of Medicine",
+        "container-title-short": "N Engl J Med",
+        "id": "hortobagyi2016",
+        "is-referenced-by-count": "1531",
+        "issue": "18",
+        "issued": {
+            "date-parts": [
+                [
+                    2016,
+                    11,
+                    3
+                ]
+            ]
+        },
+        "language": "en",
+        "member": "150",
+        "page": "1738-1748",
+        "prefix": "10.1056",
+        "providerkey": "doi",
+        "publisher": "Massachusetts Medical Society",
+        "reference-count": "25",
+        "references-count": "25",
+        "score": "1",
+        "source": "Crossref",
+        "title": "Ribociclib as First-Line Therapy for HR-Positive, Advanced Breast Cancer",
+        "type": "article-journal",
+        "volume": "375"
+    }
+]
