@@ -1,0 +1,21 @@
+Setting,Detail,Abemaciclib,Palbociclib,Ribociclib
+"Advanced or Metastatic",Licensed indication,"Women with HR-positive, HER2-negative locally advanced or metastatic breast cancer in combination with an aromatase inhibitor or fulvestrant as initial endocrine-based therapy, or in women who have received prior endocrine therapy.","Treatment of HR-positive, HER2-negative locally advanced or metastatic breast cancer:  in combination with an aromatase inhibitor; or in combination with fulvestrant in women who have received prior endocrine therapy.","Women with HR-positive, HER2-negative locally advanced or metastatic breast cancer in combination with an aromatase inhibitor or fulvestrant as initial endocrine-based therapy, or in women who have received prior endocrine therapy."
+‘First Line’ Metastatic,Licensing Trial,MONARCH-3[@goetz2017],PALOMA-2[@finn2016],MONALEESA-2[@hortobagyi2016]
+‘First Line’ Metastatic,Trial Citation,,,
+‘First Line’ Metastatic,HR for progression,0.54 (0.42 - 0.70),0.54 (0.46 - 0.72),0.45 (0.27 - 0.75)
+‘First Line’ Metastatic,HR for death,0.76 (0.56-1.03) ***ns*** [August 2024][@goetz2024a],0.96 (0.77 – 1.18) ***ns*** [May 2022],0.76 (0.63 - 0.93) [March 2022]
+‘First Line’ Metastatic,Date funded by CDF,17 January 2019,16 November 2017,16 November 2017
+‘First Line’ Metastatic,Date of NICE TA,27 February 2019,20 December 2017,20 December 2017
+‘Second Line’ Metastatic,Licensing Trial,MONARCH-2,PALOMA-3,MONALEESA-3
+‘Second Line’ Metastatic,Trial Citation,,,
+‘Second Line’ Metastatic,HR for progression,0.55 (0.45 - 0.69),0.46 (0.36–0.59),0.72 (0.57 - 0.92)
+‘Second Line’ Metastatic,HR for death,0.76 (0.61 - 0.95),0.81 (0.64 - 1.03) ***ns***,0.72 (0.57 - 0.92)
+‘Second Line’ Metastatic,Date funded by CDF,02 April 2019,28 November 2019,26 February 2021
+‘Second Line’ Metastatic,Date of NICE TA,08 May 2019,15 January 2020,31 March 2021
+Adjuvant,Licensed indication,"In combination with endocrine therapy is indicated for the adjuvant treatment of adult patients with HR-positive, HER2-negative, node-positive early breast cancer at high risk of recurrence",,"In combination with an aromatase inhibitor is indicated for the adjuvant treatment of patients with HR-positive, HER2-negative early breast cancer at high risk of recurrence"
+Adjuvant,Licensing Trial,MONARCH-E,PALLAS,NATALEE
+Adjuvant,Trial Citation,,,
+Adjuvant,HR IDFS (3 years),0.68 (0.57 - 0.81),-,0.75 (0.62 - 0.91)
+Adjuvant,HR IDFS (5 years),0.68 (0.60 - 0.77),0.96 (0.81 - 1.14) ***ns*** [4 years] ,-
+Adjuvant,Date funded by CDF,17 June 2022,,"24 April 2025 (Node positive cohort), 23 July 2025 (Whole cohort)"
+Adjuvant,Date of NICE TA,20 July 2022,,06 August 2025
