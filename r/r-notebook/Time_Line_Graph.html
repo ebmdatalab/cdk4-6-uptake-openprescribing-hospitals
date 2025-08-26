@@ -1667,7 +1667,6 @@ head(cdk46MonthlyData)</code></pre>
 average over 3 months</p>
 <pre class="r"><code>require(zoo) # for rolling averages...</code></pre>
 <pre><code>## Loading required package: zoo</code></pre>
-<pre><code>## Warning: package &#39;zoo&#39; was built under R version 4.3.3</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;zoo&#39;</code></pre>
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
@@ -1694,7 +1693,6 @@ out the Palbociclib spike.</p>
 <h3>Format the Graph</h3>
 <pre class="r"><code>require(ggsci) # will apply journal colour scheme</code></pre>
 <pre><code>## Loading required package: ggsci</code></pre>
-<pre><code>## Warning: package &#39;ggsci&#39; was built under R version 4.3.3</code></pre>
 <pre class="r"><code>cdk46MonthlyData |&gt;
   ggplot(aes(
          x=year_month,
@@ -1763,13 +1761,13 @@ print(cdk46Plot)</code></pre>
 <pre class="r"><code>KeyDates &lt;- readr::read_csv(here::here(&quot;data/KeyDates.csv&quot;)) |&gt;
   mutate(date = as.Date(date, format = &quot;%d/%m/%Y&quot;)) </code></pre>
 <pre><code>## Rows: 10 Columns: 5
-## ── Column specification ────────────────────────────────────────────────────────
+## -- Column specification --------------------------------------------------------
 ## Delimiter: &quot;,&quot;
 ## chr (4): VTM, text_pos, event, date
 ## dbl (1): marker
 ## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>head(KeyDates)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -1778,16 +1776,6 @@ print(cdk46Plot)</code></pre>
 </div>
 <div id="add-the-labels-to-the-graph" class="section level3">
 <h3>Add the labels to the graph</h3>
-<pre class="r"><code>require(ggalt)</code></pre>
-<pre><code>## Loading required package: ggalt</code></pre>
-<pre><code>## Warning: package &#39;ggalt&#39; was built under R version 4.3.3</code></pre>
-<pre><code>## Registered S3 methods overwritten by &#39;ggalt&#39;:
-##   method                  from   
-##   grid.draw.absoluteGrob  ggplot2
-##   grobHeight.absoluteGrob ggplot2
-##   grobWidth.absoluteGrob  ggplot2
-##   grobX.absoluteGrob      ggplot2
-##   grobY.absoluteGrob      ggplot2</code></pre>
 <pre class="r"><code>cdk46Plot +
 # plot all the vertical marker lines
   geom_segment(data=KeyDates, 

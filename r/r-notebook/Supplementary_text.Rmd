@@ -16,7 +16,9 @@ geometry: margin=2cm
 mainfont: Arial
 header-includes:
    - \usepackage{caption}
-bibliography: references.json
+bibliography:
+   - references.json
+   - grateful-refs.bib
 csl: jama.csl
 ---
 
@@ -36,6 +38,7 @@ require(flextable)
 require(dplyr)
 require(tidyr)
 require(ggplot2)
+require(grateful)
 theme_gtsummary_journal(journal = "jama")
 
 ```
@@ -294,6 +297,19 @@ Dose modifications for CDK4/6 inhibitors are common. Ribociclib is supplied as 2
 `r format(round(sum(doseSummary$percentage[doseSummary$vtm == "Palbociclib" & doseSummary$Dose_level != "1st"]),1))`% of patients on palbociclib were also dose reduced.
 
 \pagebreak
+
+# R Packages
+
+```{r}
+cite_packages(output="paragraph", out.dir =here::here("r/r-notebook")) #|>
+  # flextable() |>
+  # ftExtra::colformat_md()
+```
+
+
+```{r}
+#nocite_references(cite_packages(output="citekeys", out.dir =here::here("r/r-notebook")))
+```
 
 # Supplemental References
 

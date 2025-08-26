@@ -147,7 +147,6 @@ head(KeyDates)
 ### Add the labels to the graph
 
 ```{r}
-require(ggalt)
 
 
 cdk46Plot +
