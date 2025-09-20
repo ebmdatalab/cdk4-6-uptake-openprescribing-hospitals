@@ -88,7 +88,7 @@ There are some organisations with very low use prior to the adjuvant license.  I
 
 
 ### Use the maximum to normalise
-Implementation should have occurred within 90 days of positive NICE approval. So, every trust *should* have implemented by 18th October 2022.  The treatment duration of 2 years means that all trusts should have reached a 'steady-state'  by 18th October 2024.  We could therefore use Nov & Dec 2024 data to set a trust "target"
+Implementation should have occurred within 90 days of positive NICE approval. So, every trust *should* have implemented by 18th October 2022.  The treatment duration of 2 years means that all trusts should have reached a 'steady-state'  by 18th October 2024.  We could therefore use Oct, Nov & Dec 2024 data to set a trust "target"
 
 ```{r}
 abemaData |>

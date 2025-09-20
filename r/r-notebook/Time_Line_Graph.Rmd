@@ -8,6 +8,10 @@ output:
 This notebook will create a timeline plot showing the use of the 3 CDK4/6 inhibitors over time, with key timeline events highlighted.
 
 ```{r message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+	warning =  FALSE, message = FALSE
+)
+
 # load some required packages for data carpentry and visualisation
 require(dplyr)
 require(tidyr)

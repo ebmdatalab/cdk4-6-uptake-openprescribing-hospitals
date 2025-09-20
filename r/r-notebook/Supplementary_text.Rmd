@@ -30,6 +30,10 @@ try(if (knitr::opts_knit$get()$rmarkdown.pandoc.to != "html"){
 )
 })
 
+knitr::opts_chunk$set(
+	warning =  FALSE, message = FALSE
+)
+
 require(gt)
 require(tidyverse)
 require(gtsummary)
@@ -225,6 +229,29 @@ cdk46Data|>
 
 
 ```
+## Summary of Defined Daily Doses by VMP
+```{r}
+
+cdk46Data|>
+  mutate(year = year(year_month))|>
+  rowwise()|>
+  mutate(vtm = stringr::str_split_1(as.character(vmp_name), " ")[1]) |>
+  mutate(vmp_short_name = paste(stringr::str_split_1(as.character(vmp_name), " ")[2:3], collapse=" ")) |>
+  filter(year < 2025)|>
+  group_by(vtm, year) |>
+  summarise(quantity = sum(ddd_quantity)) |>
+  pivot_wider(names_from = year, values_from = quantity) |>
+  ungroup()|>
+  as_grouped_data( groups = c("vtm"), columns = NULL) %>%
+  flextable() |>
+  set_caption("Summary of number of defined daily doses issued by calendar year.") |>
+      colformat_double(digits = 0) |>
+      font (fontname = "Arial Narrow", part="all") |>
+      fontsize(size=10, part = "all") #|>
+   
+
+```
+
 
 \pagebreak
 
@@ -297,6 +324,18 @@ Dose modifications for CDK4/6 inhibitors are common. Ribociclib is supplied as 2
 `r format(round(sum(doseSummary$percentage[doseSummary$vtm == "Palbociclib" & doseSummary$Dose_level != "1st"]),1))`% of patients on palbociclib were also dose reduced.
 
 \pagebreak
+
+# Change in Prescribing
+The ratio of palbociclib to ribociclib prescribed by Cancer Alliance changed for every Alliance when comparing July-Decemeber 2021 to January-June 2024.  The change for each Alliance is tabulated below:
+
+```{r}
+# This is calculated in the Map_plots.Rmd and simply imported here
+
+change_table <- readRDS(here::here("r/r-notebook/change_table.RDS"))
+
+change_table
+
+```
 
 # R Packages
 
