@@ -1,0 +1,61 @@
+---
+title: "Dose reduction plot"
+output: html_notebook
+---
+```{r}
+require(tidyverse)
+require(ggplot2)
+
+cdk46Data <- readRDS(here::here("data/cdk46_op_hosp_clean.RDS"))
+```
+
+
+
+# Dose Reductions
+
+```{r dr-plot, fig.cap="Distribution of doses for palbocilib and abemaciclib dispensed in 2024"}
+
+cdk46Data|>
+  mutate(year = year(year_month))|>
+  rowwise()|>
+  mutate(vtm = stringr::str_split_1(as.character(vmp_name), " ")[1]) |>
+  mutate(strength = stringr::str_split_1(as.character(vmp_name), " ")[2]) |>
+  mutate(strength_mg = as.numeric(stringr::str_remove(strength, "mg") )) |>
+  filter(vtm != "Ribociclib") |>
+  filter(year == 2024) |>
+  group_by(vtm, strength_mg) |>
+  summarise(quantity = sum(quantity)) |>
+  mutate(Dose_level = toOrdinal::toOrdinal(rank(-strength_mg))) |>
+  mutate(percentage = 100*(quantity/sum(quantity))) -> doseSummary
+
+doseSummary |>
+  mutate(Dose_level = as.factor(Dose_level)) |>
+  arrange(Dose_level) |>
+  mutate(label = glue::glue(
+    "{Dose_level} dose level:\n{strength_mg}mg\n\n{round(percentage,1)}%")) |>
+  mutate(cum_percentage = cumsum(percentage) ) |>
+  mutate(label_pos = cumsum(percentage) - (percentage/2)) |>
+  ggplot(aes(x=vtm, y=percentage, fill=forcats::fct_rev(Dose_level))) +
+  geom_col() +
+  theme_bw() +
+  ggsci::scale_fill_bmj() +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank()) +
+  theme(panel.border = element_blank(),
+        axis.line = element_line(linewidth = 0.5, colour = "black") ,
+        legend.position = "none") +
+  ylab("Percentage of doses dispensed at this dose level") +
+  xlab("CDK 4/6 Inhibitor") +
+    coord_flip()+
+  geom_text(aes(label=label, y= label_pos), size=3.5, color="white")
+  
+ggsave(here::here("r/outputs/DoseReductions.svg"), cdk46Plot, width = 8, height =4)
+ggsave(here::here("r/outputs/DoseReductions.png"), cdk46Plot, dpi = 350, width = 8, height =4)
+
+```
+
+Dose modifications for CDK4/6 inhibitors are common. Ribociclib is supplied as 200mg tablets and therefore it is not possible to determine from aggregate issuing data how frequently a dose modification may occur. Different strength tablets are used to supply dose modifications for palbociclib and abemaciclib. Using the data from 2024, the proportion of different tablet strengths is shown in Figure \@ref(fig:dr-plot)
+
+`r  format(round(sum(doseSummary$percentage[doseSummary$vtm == "Abemaciclib" & doseSummary$Dose_level != "1st"]),1))`% of patients on abemaciclib are on a reduced dose, in contrast to the MorachE trial which only had 43.7% dose reductions overall and just 13.9% on the lowest dose.
+
+`r format(round(sum(doseSummary$percentage[doseSummary$vtm == "Palbociclib" & doseSummary$Dose_level != "1st"]),1))`% of patients on palbociclib were also dose reduced.

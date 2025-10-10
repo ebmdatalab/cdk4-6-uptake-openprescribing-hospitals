@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 # load some required packages for data carpentry and visualisation
 require(dplyr)
 require(tidyr)
+BMJ_colours <- c("#2A6EBB", "#C50084","#00B2A9")
 
 # Get the dataset 
 # Requires cleaned data
@@ -79,7 +80,8 @@ cdk46MonthlyData |>
        )) +
   geom_line(lwd=1.1) +
   theme_classic() +
-  scale_color_bmj()-> cdk46Plot
+  #scale_color_bmj()
+  scale_color_manual(values = BMJ_colours) -> cdk46Plot
 
 cdk46Plot +
   # Title the plot and add a caption with DDD
