@@ -1,0 +1,190 @@
+---
+title: "Timeline"
+output: html_notebook
+---
+This notebook builds the timeline for the new timeline plot
+
+```{r}
+require(tidyverse)
+require(ggplot2)
+
+# read some data
+
+dates <- read_csv(here::here("data/KeyDates.csv"))
+
+dates |>
+  mutate(date = as.Date(date, format = "%d/%m/%Y")) |>
+  mutate(event_date = as.Date(event_date, format = "%d/%m/%Y")) |>
+  mutate(cdf_date = as.Date(cdf_date, format = "%d/%m/%Y")) -> dates
+```
+
+Start with a plot of the dates and a marker on a line
+
+```{r}
+dates |>
+  ggplot(aes(x=event_date, y=0)) +
+  geom_point()
+```
+
+Now remove the Y axis, remove backround and Y grid and plot a X-axis at 0 (manually)
+
+```{r}
+dates |>
+  ggplot(aes(x=event_date, y=0)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  theme_void()
+```
+
+Add colours for the drugs
+
+```{r}
+dates |>
+  ggplot(aes(x=event_date, y=0)) +
+  geom_point(aes(colour=VTM)) +
+  geom_hline(yintercept = 0) +
+  theme_void()
+```
+
+
+Add shapes for the events
+
+```{r}
+dates |>
+  ggplot(aes(x=event_date, y=0)) +
+  geom_hline(yintercept = 0) +
+  geom_point(aes(colour=VTM, shape = type, size = 1.5)) +
+  theme_void() 
+  
+```
+
+Update the colour scheme and add x-axis date labels back in.  This looks odd, but will be fixed when plotting further labels.
+
+```{r}
+
+years  <- seq(2016, 2025)
+dates |>
+  ggplot(aes(x=date, y=0)) +
+  geom_hline(yintercept = 0) +
+  geom_segment(y=0, yend=-0.0035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")))+
+  geom_text(aes(y= -0.004, x=as.Date(paste0(years,"-01-01")), label=years))+
+  geom_point(aes(colour=VTM, shape = type, size = 1.5)) +
+  theme_void() +
+  ggsci::scale_color_bmj() 
+
+  
+```
+Plot labels and lines for the events
+```{r}
+
+dates |>
+  arrange(event_date) ->dates
+
+years  <- seq(2016, 2025)
+dates |>
+  ggplot(aes(x=event_date, y=0, colour= VTM)) +
+  geom_hline(yintercept = 0) +
+  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), colour="black")+
+  geom_text(aes(y= -0.04, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black")+
+  geom_point(aes(colour=VTM, shape = type), size = 3) +
+  theme_void() +
+  ggsci::scale_color_bmj() +
+  geom_text(aes(y= 0.8*((row(dates)[,1]%%2) - 0.5), x=event_date, label=str_wrap(event,12), colour = VTM), check_overlap = T, size=2.85)+
+  geom_segment(y=0, yend= 0.6*((row(dates)[,1]%%2) - 0.5), x=dates$event_date, xend=dates$event_date)+
+  ylim(-0.8,0.8)+
+  theme(legend.position = "none")
+```
+
+Plot the NICE implementation time limit (90days AFTER a NICE)
+
+```{r}
+dates |>
+  ggplot(aes(x=event_date, y=0, colour= VTM)) +
+  geom_hline(yintercept = 0) +
+  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), colour="black")+
+  geom_text(aes(y= -0.04, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black")+
+  geom_point(aes(colour=VTM, shape = type), size = 3) +
+  theme_void() +
+  ggsci::scale_color_bmj() +
+  geom_text(aes(y= 0.8*((row(dates)[,1]%%2) - 0.5), x=event_date, label=str_wrap(event,12), colour = VTM), check_overlap = T, size=2.85)+
+  geom_segment(y=0, yend= 0.6*((row(dates)[,1]%%2) - 0.5), x=dates$event_date, xend=dates$event_date)+
+  ylim(-0.8,0.8)+
+  theme(legend.position = "none")+
+  geom_segment(y=0, yend=0, x=dates$event_date[dates$type=="NICE"], xend=dates$event_date[dates$type=="NICE"]+90, 
+               data = dates[dates$type=="NICE",],
+               arrow=arrow(
+                 angle = 30, 
+                 length = unit(0.05, "inches"), 
+                 ends = "last", 
+                 type = "open")
+               )
+```
+Align text to create space & make markers hollow to show underlying markers
+```{r}
+dates |>
+  ggplot(aes(x=event_date, y=0, colour= VTM)) +
+  geom_hline(yintercept = 0) +
+  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), colour="black")+
+  geom_text(aes(y= -0.04, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black")+
+  geom_point(aes(colour=VTM, shape = type), size = 3, stroke = 0.98) +
+  scale_shape_manual(values=c(0,10))+
+  theme_void() +
+  ggsci::scale_color_bmj() +
+  geom_text(aes(y= 0.8*((row(dates)[,1]%%2) - 0.5), x=event_date, label=str_wrap(event,12), colour = VTM, hjust=hjust), check_overlap = T, size=2.85)+
+  geom_segment(y=((row(dates)[,1]%%2) - 0.5)*0.07, yend= 0.6*((row(dates)[,1]%%2) - 0.5), x=dates$event_date, xend=dates$event_date)+
+  ylim(-0.8,0.8)+
+  theme(legend.position = "none")+
+  geom_segment(y=0, yend=0, x=dates$event_date[dates$type=="NICE"], xend=dates$event_date[dates$type=="NICE"]+90, 
+               data = dates[dates$type=="NICE",],
+               linewidth = 0.65,
+               arrow=arrow(
+                 angle = 30, 
+                 length = unit(0.05, "inches"), 
+                 ends = "last", 
+                 type = "open")
+               )
+```
+Add cdf time lines
+
+```{r}
+dates |>
+  ggplot(aes(x=event_date, y=0, colour= VTM)) +
+  geom_hline(yintercept = 0) +
+  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), colour="black")+
+  geom_text(aes(y= -0.06, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black")+
+  geom_point(aes(colour=VTM, shape = type), size = 2, stroke = 0.8) +
+  scale_shape_manual(values=c(0,10))+
+  theme_void() +
+  ggsci::scale_color_bmj() +
+  geom_text(aes(y= 0.8*((row(dates)[,1]%%2) - 0.5), x=event_date, label=str_wrap(event,12), colour = VTM, hjust=hjust), check_overlap = T, size=2.85)+
+  geom_segment(y=((row(dates)[,1]%%2) - 0.5)*0.07, yend= 0.6*((row(dates)[,1]%%2) - 0.5), x=dates$event_date, xend=dates$event_date)+
+  ylim(-0.8,0.8)+
+  theme(legend.position = "none")+
+  geom_segment(y=0, yend=0, x=dates$event_date[dates$type=="NICE"], xend=dates$event_date[dates$type=="NICE"]+90, 
+               data = dates[dates$type=="NICE",],
+               linewidth = 0.55,
+               arrow=arrow(
+                 angle = 30, 
+                 length = unit(0.05, "inches"), 
+                 ends = "last", 
+                 type = "open")
+               )+
+    geom_segment(y=0, yend=0, x=dates$event_date[dates$type=="NICE"], xend=dates$cdf_date[dates$type=="NICE"], 
+               data = dates[dates$type=="NICE",],
+               linewidth = 0.55,
+               arrow=arrow(
+                 angle = 90, 
+                 length = unit(0.03, "inches"), 
+                 ends = "last", 
+                 type = "open")
+               ) -> event_timeline
+
+print(event_timeline)
+
+ggsave(here::here("r/outputs/EventTimeLine.svg"), event_timeline, width = 8, height =4)
+ggsave(here::here("r/outputs/EventTimeLine.png"), event_timeline, dpi = 350, width = 8, height =4)
+
+```
+
+
+  
