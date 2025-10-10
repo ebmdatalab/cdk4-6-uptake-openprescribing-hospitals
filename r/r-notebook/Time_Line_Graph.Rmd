@@ -79,7 +79,7 @@ cdk46MonthlyData |>
        )) +
   geom_line(lwd=1.1) +
   theme_classic() +
-  scale_color_jama()-> cdk46Plot
+  scale_color_bmj()-> cdk46Plot
 
 cdk46Plot +
   # Title the plot and add a caption with DDD
@@ -190,7 +190,7 @@ print(cdk46Plot)
 
 ```
 ## Journal specifics
-It looks like JAMA don't use a grid on their plots, but do use horizontal grid lines for major axis ticks
+Add major grid horizontally
 
 ```{r}
 cdk46Plot +
