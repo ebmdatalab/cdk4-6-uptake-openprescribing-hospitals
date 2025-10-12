@@ -1,0 +1,187 @@
+---
+title: "Maps Plot"
+output:
+  html_document:
+    df_print: paged
+---
+
+This notebook will create cancer alliance plots comparing palbociclib and ribociclib use.
+
+
+
+## Load the data
+
+```{r message=FALSE, warning=FALSE}
+
+knitr::opts_chunk$set(
+	warning =  FALSE, message = FALSE
+)
+
+# load some required packages for data carpentry and visualisation
+require(ggplot2)
+require(tidyverse)
+require(gtsummary)
+require(gt)
+#require(ggalt)
+
+
+# Get the dataset 
+# Requires cleaned data
+cdk46Data <- readRDS(here::here("data/cdk46_op_hosp_clean.RDS"))
+
+# agregate the data to VTM & month for ICBs
+cdk46Data |>
+  # get the VTM (ingredient)
+  separate_wider_delim(vmp_name, delim=" ", names = c("VTM", "strength", "form")) |>
+  # summarise the data using month and VTM
+  group_by(year_month, VTM, ICB_name) |>
+  summarise(ddd=sum(ddd_quantity)) -> cdk46ICBData
+
+head(cdk46ICBData)
+```
+
+## Text for article
+```{r}
+dd21 <- cdk46ICBData |>
+  filter(year_month >= as.Date("2021-07-01")) |>
+  filter(year_month <= as.Date("2021-12-31")) |>
+  group_by(VTM) |>
+  summarise(`DDD 2021`=sum(ddd))
+
+dd24 <- cdk46ICBData |>
+  filter(year_month >= as.Date("2024-01-01")) |>
+  filter(year_month <= as.Date("2024-06-30")) |>
+  group_by(VTM) |>
+  summarise(`DDD 2024`=sum(ddd))
+
+dd21 |>
+  left_join(dd24)
+
+```
+
+
+```{r}
+
+cdk46ICBData |>
+  ungroup()|>
+  filter(VTM == "Ribociclib") |>
+  select(-VTM)|> 
+  rename(Ribociclib = ddd) -> ribo
+
+cdk46ICBData |>
+  ungroup()|>
+  filter(VTM == "Palbociclib") |>
+  select(-VTM)|> 
+  rename(Palbociclib = ddd)   -> palbo
+
+ribo |>
+  left_join(palbo) -> combinedData
+
+```
+
+
+```{r}
+alliances <- read_csv(here::here("data/CancerAlliances.csv")) |>
+  mutate(ICB = paste("NHS",toupper(ICS))) 
+
+
+combinedData |>
+  rename(ICB = ICB_name) |>
+  mutate(ICB = str_remove(ICB, " INTEGRATED CARE BOARD")) |>
+  # mutate(ICB = str_replace_all(ICB, " And ", " and ")) |>
+  # mutate(ICB = str_replace_all(ICB, " Of ", " of ")) |>
+  # mutate(ICB = str_replace_all(ICB, " The ", " the ")) |>
+  # mutate(ICB = str_replace_all(ICB, "-", " ")) |>
+  # mutate(ICB = str_replace_all(ICB, " On ", " on ")) |>
+  # mutate(ICB = str_replace_all(ICB, " and Isle ", " and the Isle ")) |>
+  left_join(alliances) -> combinedData
+
+combinedData |>
+  filter(year_month >= as.Date("2021-07-01") & year_month <= as.Date("2024-06-30") ) |>
+  filter(year_month >= as.Date("2024-01-01") | year_month <= as.Date("2021-12-31") ) |>
+  mutate(year = year(year_month)) |>
+  select(-year_month, -ICB, -Region, -ICS) |>
+  group_by(year, Cancer_Alliance) |>
+  summarise_all(sum) |>
+  mutate(ratio =  Ribociclib / Palbociclib ) |>
+  select(-Ribociclib, - Palbociclib) |>
+  pivot_wider(id_cols = "Cancer_Alliance", names_from = year, values_from = ratio) |>
+  mutate(change = (`2024` - `2021`) / `2021`) -> cdkChanges
+
+cdkChanges |>
+  gt() |>
+  fmt_number(columns = c( "2021", "2024"), decimals = 2) |>
+  fmt_percent(columns = c( "change"), decimals = 1)  -> change_table
+
+change_table
+
+```
+
+
+
+```{r}
+## Draw some maps
+### shape file from
+#require(rgdal)
+require(sf)
+#shp <- readOGR(dsn = "map/Cancer_Alliances_July_2023_Boundaries/CAL_JUL_2023_EN_BFE.shp")
+shp <- read_sf(here::here("data/map/Cancer_Alliances_July_2023_Boundaries/CAL_JUL_2023_EN_BFE.shp"))
+### https://geoportal.statistics.gov.uk/datasets/ons::cancer-alliances-july-2023-boundaries-en-bfe-2/explore?location=52.724129%2C-2.487028%2C7.11
+
+## Add percentage data to shapes
+cdkChanges |>
+  mutate(CAL23NM = str_remove(Cancer_Alliance, " Cancer Alliance")) |>
+  mutate(CAL23NM = str_replace(CAL23NM, "East of England  South", "East of England - South")) |>
+  mutate(CAL23NM = str_replace(CAL23NM, "East of England  North", "East of England - North")) |>
+  mutate(CAL23NM = str_replace(CAL23NM, "Humber, Coast and Vale", "Humber and North Yorkshire")) |>
+  mutate(CAL23NM = str_replace(CAL23NM, "RM Partners", "West London")) |>
+  select(-Cancer_Alliance) -> cdkData
+
+shp |>
+  left_join(cdkData, by = c("CAL23NM" = "CAL23NM")) -> shp_with_data
+
+
+ggplot(shp_with_data) +
+  geom_sf(aes(fill = change), color = "black") +
+  scale_fill_gradient(low = "#f8ddc9", high = "#b15716", name='% Change', 
+                      breaks = seq(from = 0 ,to =20, by=5), 
+                      labels = scales::percent(seq(from = 0 ,to =20, by=5)),
+                      limits = c(0,20))+
+  ggtitle('Change in Ribociclib to Palbociclib Ratio', 'by Cancer Alliance\nbetween Jul-Dec 2021 and Jan-Jun 2024') +
+  theme_void() -> changeMap
+
+
+
+ggplot(shp_with_data) +
+  geom_sf(aes(fill = `2021`), color = "black") +
+  scale_fill_gradient(low = "#2a6ebb", high = "#00B2A9", limits=c(0, 1.2), name='Ribociclib to Palbociclib Ratio')+
+  guides(fill = guide_colourbar(position = "bottom", title.position = "top", title.hjust=0.5))+
+  ggtitle('July - December 2021')+
+  theme_void()-> baselineMap
+
+ggplot(shp_with_data) +
+  geom_sf(aes(fill = `2024`), color = "black") +
+  scale_fill_gradient(low = "#2a6ebb", high = "#00B2A9", limits=c(0, 1.2), name='Ribociclib to Palbociclib Ratio')+
+  guides(fill = guide_colourbar(position = "bottom", title.position = "top", title.hjust=0.5))+
+  ggtitle('January - June 2024')+
+  theme_void() -> currentMap
+
+lay <- rbind(c(1,1, 3,3,3),
+             c(2,2, 3,3,3))
+
+cdk46Plot <- gridExtra::grid.arrange(baselineMap, currentMap, changeMap,  layout_matrix = lay)
+
+cdk46Plot
+
+```
+
+
+## Export plot for Journal
+Exports the plots and saves the change table for the supplements
+
+```{r}
+ggsave(here::here("r/outputs/Ribo_Palbo_Ratio_Map.svg"), cdk46Plot, width = 8, height =6)
+ggsave(here::here("r/outputs/Ribo_Palbo_Ratio_Map.png"), cdk46Plot, dpi = 350, width = 8, height =6)
+
+saveRDS(change_table,here::here("r/r-notebook/rib-palb_change_table.RDS") )
+```
