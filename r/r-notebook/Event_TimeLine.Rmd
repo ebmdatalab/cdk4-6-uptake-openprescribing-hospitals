@@ -67,8 +67,8 @@ years  <- seq(2016, 2025)
 dates |>
   ggplot(aes(x=date, y=0)) +
   geom_hline(yintercept = 0) +
-  geom_segment(y=0, yend=-0.0035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")))+
-  geom_text(aes(y= -0.004, x=as.Date(paste0(years,"-01-01")), label=years))+
+  geom_segment(y=0, yend=-0.0035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), data = tibble(years))+
+  geom_text(aes(y= -0.004, x=as.Date(paste0(years,"-01-01")), label=years), data = tibble(years))+
   geom_point(aes(colour=VTM, shape = type, size = 1.5)) +
   theme_void() +
   ggsci::scale_color_bmj() 
@@ -85,8 +85,8 @@ years  <- seq(2016, 2025)
 dates |>
   ggplot(aes(x=event_date, y=0, colour= VTM)) +
   geom_hline(yintercept = 0) +
-  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), colour="black")+
-  geom_text(aes(y= -0.04, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black")+
+  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), data = tibble(years), colour="black")+
+  geom_text(aes(y= -0.04, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black", data = tibble(years))+
   geom_point(aes(colour=VTM, shape = type), size = 3) +
   theme_void() +
   ggsci::scale_color_bmj() +
@@ -102,8 +102,8 @@ Plot the NICE implementation time limit (90days AFTER a NICE)
 dates |>
   ggplot(aes(x=event_date, y=0, colour= VTM)) +
   geom_hline(yintercept = 0) +
-  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), colour="black")+
-  geom_text(aes(y= -0.04, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black")+
+  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), colour="black", data = tibble(years))+
+  geom_text(aes(y= -0.04, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black", data = tibble(years))+
   geom_point(aes(colour=VTM, shape = type), size = 3) +
   theme_void() +
   ggsci::scale_color_bmj() +
@@ -125,10 +125,10 @@ Align text to create space & make markers hollow to show underlying markers
 dates |>
   ggplot(aes(x=event_date, y=0, colour= VTM)) +
   geom_hline(yintercept = 0) +
-  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), colour="black")+
-  geom_text(aes(y= -0.04, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black")+
+  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), colour="black", data = tibble(years))+
+  geom_text(aes(y= -0.04, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black", data = tibble(years))+
   geom_point(aes(colour=VTM, shape = type), size = 3, stroke = 0.98) +
-  scale_shape_manual(values=c(0,10))+
+  scale_shape_manual(values=c(9, 0,10))+
   theme_void() +
   ggsci::scale_color_bmj() +
   geom_text(aes(y= 0.8*((row(dates)[,1]%%2) - 0.5), x=event_date, label=str_wrap(event,12), colour = VTM, hjust=hjust), check_overlap = T, size=2.85)+
@@ -151,10 +151,10 @@ Add cdf time lines
 dates |>
   ggplot(aes(x=event_date, y=0, colour= VTM)) +
   geom_hline(yintercept = 0) +
-  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), colour="black")+
-  geom_text(aes(y= -0.06, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black")+
+  geom_segment(y=0, yend=-0.035, x=as.Date(paste0(years,"-01-01")), xend=as.Date(paste0(years,"-01-01")), colour="black", data = tibble(years))+
+  geom_text(aes(y= -0.06, x=as.Date(paste0(years,"-01-01")), label=years), size=2.5, colour="black", data = tibble(years))+
   geom_point(aes(colour=VTM, shape = type), size = 2, stroke = 0.8) +
-  scale_shape_manual(values=c(0,10))+
+  scale_shape_manual(values=c(9,0,10))+
   theme_void() +
   #ggsci::scale_color_bmj() +
   scale_colour_manual(values=BMJ_colours)+

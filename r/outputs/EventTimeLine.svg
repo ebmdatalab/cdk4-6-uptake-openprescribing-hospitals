@@ -42,6 +42,15 @@
 <text x='433.40' y='156.36' text-anchor='middle' style='font-size: 7.11px; font-family: "Arial";' textLength='15.81px' lengthAdjust='spacingAndGlyphs'>2023</text>
 <text x='491.53' y='156.36' text-anchor='middle' style='font-size: 7.11px; font-family: "Arial";' textLength='15.81px' lengthAdjust='spacingAndGlyphs'>2024</text>
 <text x='549.82' y='156.36' text-anchor='middle' style='font-size: 7.11px; font-family: "Arial";' textLength='15.81px' lengthAdjust='spacingAndGlyphs'>2025</text>
+<line x1='71.25' y1='144.00' x2='78.89' y2='144.00' style='stroke-width: 1.13; stroke: #00B2A9;' />
+<line x1='75.07' y1='147.82' x2='75.07' y2='140.18' style='stroke-width: 1.13; stroke: #00B2A9;' />
+<polygon points='71.25,144.00 75.07,140.18 78.89,144.00 75.07,147.82 ' style='stroke-width: 1.13; stroke: #00B2A9;' />
+<line x1='73.48' y1='144.00' x2='81.12' y2='144.00' style='stroke-width: 1.13; stroke: #2A6EBB;' />
+<line x1='77.30' y1='147.82' x2='77.30' y2='140.18' style='stroke-width: 1.13; stroke: #2A6EBB;' />
+<polygon points='73.48,144.00 77.30,140.18 81.12,144.00 77.30,147.82 ' style='stroke-width: 1.13; stroke: #2A6EBB;' />
+<line x1='130.50' y1='144.00' x2='138.14' y2='144.00' style='stroke-width: 1.13; stroke: #C50084;' />
+<line x1='134.32' y1='147.82' x2='134.32' y2='140.18' style='stroke-width: 1.13; stroke: #C50084;' />
+<polygon points='130.50,144.00 134.32,140.18 138.14,144.00 134.32,147.82 ' style='stroke-width: 1.13; stroke: #C50084;' />
 <rect x='137.99' y='141.30' width='5.40' height='5.40' style='stroke-width: 1.13; stroke: #2A6EBB;' />
 <rect x='137.99' y='141.30' width='5.40' height='5.40' style='stroke-width: 1.13; stroke: #00B2A9;' />
 <rect x='207.10' y='141.30' width='5.40' height='5.40' style='stroke-width: 1.13; stroke: #C50084;' />
@@ -58,46 +67,61 @@
 <circle cx='511.92' cy='144.00' r='2.70' style='stroke-width: 1.13; stroke: #C50084;' />
 <line x1='509.21' y1='144.00' x2='514.62' y2='144.00' style='stroke-width: 1.13; stroke: #C50084;' />
 <line x1='511.92' y1='146.70' x2='511.92' y2='141.30' style='stroke-width: 1.13; stroke: #C50084;' />
-<text x='140.69' y='69.77' text-anchor='end' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='38.69px' lengthAdjust='spacingAndGlyphs'>Palbociclib</text>
-<text x='140.69' y='81.44' text-anchor='end' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='27.88px' lengthAdjust='spacingAndGlyphs'>first line</text>
-<text x='140.69' y='93.12' text-anchor='end' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
-<text x='140.69' y='200.68' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='34.64px' lengthAdjust='spacingAndGlyphs'>Ribociclib</text>
-<text x='140.69' y='212.35' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='27.88px' lengthAdjust='spacingAndGlyphs'>first line</text>
-<text x='140.69' y='224.03' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
-<text x='209.80' y='69.77' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='43.63px' lengthAdjust='spacingAndGlyphs'>Abemaciclib</text>
-<text x='209.80' y='81.44' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='27.88px' lengthAdjust='spacingAndGlyphs'>first line</text>
-<text x='209.80' y='93.12' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
-<text x='220.95' y='200.68' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='43.63px' lengthAdjust='spacingAndGlyphs'>Abemaciclib</text>
-<text x='220.95' y='212.35' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='40.94px' lengthAdjust='spacingAndGlyphs'>second line</text>
-<text x='220.95' y='224.03' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
-<text x='261.09' y='69.77' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='38.69px' lengthAdjust='spacingAndGlyphs'>Palbociclib</text>
-<text x='261.09' y='81.44' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='40.94px' lengthAdjust='spacingAndGlyphs'>second line</text>
-<text x='261.09' y='93.12' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
-<text x='331.32' y='200.68' text-anchor='middle' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='34.64px' lengthAdjust='spacingAndGlyphs'>Ribociclib</text>
-<text x='331.32' y='212.35' text-anchor='middle' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='40.94px' lengthAdjust='spacingAndGlyphs'>second line</text>
-<text x='331.32' y='224.03' text-anchor='middle' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
-<text x='385.94' y='69.77' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='34.64px' lengthAdjust='spacingAndGlyphs'>Ribociclib</text>
-<text x='385.94' y='81.44' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='31.03px' lengthAdjust='spacingAndGlyphs'>OS Data</text>
-<text x='385.94' y='93.12' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='33.26px' lengthAdjust='spacingAndGlyphs'>(first line)</text>
-<text x='400.44' y='200.68' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='38.69px' lengthAdjust='spacingAndGlyphs'>Palbociclib</text>
-<text x='400.44' y='212.35' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='31.03px' lengthAdjust='spacingAndGlyphs'>OS Data</text>
-<text x='400.44' y='224.03' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='33.26px' lengthAdjust='spacingAndGlyphs'>(first line)</text>
-<text x='407.12' y='69.77' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='43.63px' lengthAdjust='spacingAndGlyphs'>Abemaciclib</text>
-<text x='407.12' y='81.44' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='30.59px' lengthAdjust='spacingAndGlyphs'>adjuvant</text>
-<text x='407.12' y='93.12' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
-<text x='511.92' y='200.68' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='43.63px' lengthAdjust='spacingAndGlyphs'>Abemaciclib</text>
-<text x='511.92' y='212.35' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='31.03px' lengthAdjust='spacingAndGlyphs'>OS Data</text>
-<text x='511.92' y='224.03' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='33.26px' lengthAdjust='spacingAndGlyphs'>(first line)</text>
-<line x1='140.69' y1='138.27' x2='140.69' y2='94.91' style='stroke-width: 1.07; stroke: #2A6EBB; stroke-linecap: butt;' />
-<line x1='140.69' y1='149.73' x2='140.69' y2='193.09' style='stroke-width: 1.07; stroke: #00B2A9; stroke-linecap: butt;' />
-<line x1='209.80' y1='138.27' x2='209.80' y2='94.91' style='stroke-width: 1.07; stroke: #C50084; stroke-linecap: butt;' />
-<line x1='220.95' y1='149.73' x2='220.95' y2='193.09' style='stroke-width: 1.07; stroke: #C50084; stroke-linecap: butt;' />
-<line x1='261.09' y1='138.27' x2='261.09' y2='94.91' style='stroke-width: 1.07; stroke: #2A6EBB; stroke-linecap: butt;' />
-<line x1='331.32' y1='149.73' x2='331.32' y2='193.09' style='stroke-width: 1.07; stroke: #00B2A9; stroke-linecap: butt;' />
-<line x1='385.94' y1='138.27' x2='385.94' y2='94.91' style='stroke-width: 1.07; stroke: #00B2A9; stroke-linecap: butt;' />
-<line x1='400.44' y1='149.73' x2='400.44' y2='193.09' style='stroke-width: 1.07; stroke: #2A6EBB; stroke-linecap: butt;' />
-<line x1='407.12' y1='138.27' x2='407.12' y2='94.91' style='stroke-width: 1.07; stroke: #C50084; stroke-linecap: butt;' />
-<line x1='511.92' y1='149.73' x2='511.92' y2='193.09' style='stroke-width: 1.07; stroke: #C50084; stroke-linecap: butt;' />
+<text x='75.07' y='69.77' text-anchor='middle' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='57.57px' lengthAdjust='spacingAndGlyphs'>MONALEESA-2</text>
+<text x='75.07' y='81.44' text-anchor='middle' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='15.44px' lengthAdjust='spacingAndGlyphs'>Trial</text>
+<text x='75.07' y='93.12' text-anchor='middle' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='35.55px' lengthAdjust='spacingAndGlyphs'>Published</text>
+<text x='77.30' y='200.68' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='40.33px' lengthAdjust='spacingAndGlyphs'>PALOMA-2</text>
+<text x='77.30' y='212.35' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='15.44px' lengthAdjust='spacingAndGlyphs'>Trial</text>
+<text x='77.30' y='224.03' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='35.55px' lengthAdjust='spacingAndGlyphs'>Published</text>
+<text x='134.32' y='69.77' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='49.01px' lengthAdjust='spacingAndGlyphs'>MONARCH-3</text>
+<text x='134.32' y='81.44' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='15.44px' lengthAdjust='spacingAndGlyphs'>Trial</text>
+<text x='134.32' y='93.12' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='35.55px' lengthAdjust='spacingAndGlyphs'>Published</text>
+<text x='140.69' y='200.68' text-anchor='end' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='38.69px' lengthAdjust='spacingAndGlyphs'>Palbociclib</text>
+<text x='140.69' y='212.35' text-anchor='end' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='27.88px' lengthAdjust='spacingAndGlyphs'>first line</text>
+<text x='140.69' y='224.03' text-anchor='end' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
+<text x='209.80' y='200.68' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='43.63px' lengthAdjust='spacingAndGlyphs'>Abemaciclib</text>
+<text x='209.80' y='212.35' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='27.88px' lengthAdjust='spacingAndGlyphs'>first line</text>
+<text x='209.80' y='224.03' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
+<text x='220.95' y='69.77' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='43.63px' lengthAdjust='spacingAndGlyphs'>Abemaciclib</text>
+<text x='220.95' y='81.44' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='40.94px' lengthAdjust='spacingAndGlyphs'>second line</text>
+<text x='220.95' y='93.12' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
+<text x='261.09' y='200.68' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='38.69px' lengthAdjust='spacingAndGlyphs'>Palbociclib</text>
+<text x='261.09' y='212.35' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='40.94px' lengthAdjust='spacingAndGlyphs'>second line</text>
+<text x='261.09' y='224.03' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
+<text x='331.32' y='69.77' text-anchor='middle' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='34.64px' lengthAdjust='spacingAndGlyphs'>Ribociclib</text>
+<text x='331.32' y='81.44' text-anchor='middle' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='40.94px' lengthAdjust='spacingAndGlyphs'>second line</text>
+<text x='331.32' y='93.12' text-anchor='middle' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
+<text x='385.94' y='183.16' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='30.58px' lengthAdjust='spacingAndGlyphs'>First line</text>
+<text x='385.94' y='194.84' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='31.49px' lengthAdjust='spacingAndGlyphs'>ribociclib</text>
+<text x='385.94' y='206.51' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='27.43px' lengthAdjust='spacingAndGlyphs'>survival</text>
+<text x='385.94' y='218.19' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='17.99px' lengthAdjust='spacingAndGlyphs'>data:</text>
+<text x='385.94' y='229.87' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='29.69px' lengthAdjust='spacingAndGlyphs'>HR 0.76</text>
+<text x='385.94' y='241.55' text-anchor='end' style='font-size: 8.11px;fill: #00B2A9; font-family: "Arial";' textLength='39.57px' lengthAdjust='spacingAndGlyphs'>(0.63-0.93)</text>
+<text x='400.44' y='52.25' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='30.58px' lengthAdjust='spacingAndGlyphs'>First line</text>
+<text x='400.44' y='63.93' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='37.79px' lengthAdjust='spacingAndGlyphs'>palbociclib</text>
+<text x='400.44' y='75.60' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='27.43px' lengthAdjust='spacingAndGlyphs'>survival</text>
+<text x='400.44' y='87.28' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='17.99px' lengthAdjust='spacingAndGlyphs'>data:</text>
+<text x='400.44' y='98.96' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='29.69px' lengthAdjust='spacingAndGlyphs'>HR 0.96</text>
+<text x='400.44' y='110.64' text-anchor='middle' style='font-size: 8.11px;fill: #2A6EBB; font-family: "Arial";' textLength='39.57px' lengthAdjust='spacingAndGlyphs'>(0.78-1.18)</text>
+<text x='407.12' y='200.68' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='43.63px' lengthAdjust='spacingAndGlyphs'>Abemaciclib</text>
+<text x='407.12' y='212.35' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='30.59px' lengthAdjust='spacingAndGlyphs'>adjuvant</text>
+<text x='407.12' y='224.03' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='19.34px' lengthAdjust='spacingAndGlyphs'>NICE</text>
+<text x='511.92' y='69.77' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='43.63px' lengthAdjust='spacingAndGlyphs'>Abemaciclib</text>
+<text x='511.92' y='81.44' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='31.03px' lengthAdjust='spacingAndGlyphs'>OS Data</text>
+<text x='511.92' y='93.12' text-anchor='middle' style='font-size: 8.11px;fill: #C50084; font-family: "Arial";' textLength='33.26px' lengthAdjust='spacingAndGlyphs'>(first line)</text>
+<line x1='75.07' y1='138.27' x2='75.07' y2='94.91' style='stroke-width: 1.07; stroke: #00B2A9; stroke-linecap: butt;' />
+<line x1='77.30' y1='149.73' x2='77.30' y2='193.09' style='stroke-width: 1.07; stroke: #2A6EBB; stroke-linecap: butt;' />
+<line x1='134.32' y1='138.27' x2='134.32' y2='94.91' style='stroke-width: 1.07; stroke: #C50084; stroke-linecap: butt;' />
+<line x1='140.69' y1='149.73' x2='140.69' y2='193.09' style='stroke-width: 1.07; stroke: #2A6EBB; stroke-linecap: butt;' />
+<line x1='140.69' y1='138.27' x2='140.69' y2='94.91' style='stroke-width: 1.07; stroke: #00B2A9; stroke-linecap: butt;' />
+<line x1='209.80' y1='149.73' x2='209.80' y2='193.09' style='stroke-width: 1.07; stroke: #C50084; stroke-linecap: butt;' />
+<line x1='220.95' y1='138.27' x2='220.95' y2='94.91' style='stroke-width: 1.07; stroke: #C50084; stroke-linecap: butt;' />
+<line x1='261.09' y1='149.73' x2='261.09' y2='193.09' style='stroke-width: 1.07; stroke: #2A6EBB; stroke-linecap: butt;' />
+<line x1='331.32' y1='138.27' x2='331.32' y2='94.91' style='stroke-width: 1.07; stroke: #00B2A9; stroke-linecap: butt;' />
+<line x1='385.94' y1='149.73' x2='385.94' y2='193.09' style='stroke-width: 1.07; stroke: #00B2A9; stroke-linecap: butt;' />
+<line x1='400.44' y1='138.27' x2='400.44' y2='94.91' style='stroke-width: 1.07; stroke: #2A6EBB; stroke-linecap: butt;' />
+<line x1='407.12' y1='149.73' x2='407.12' y2='193.09' style='stroke-width: 1.07; stroke: #C50084; stroke-linecap: butt;' />
+<line x1='511.92' y1='138.27' x2='511.92' y2='94.91' style='stroke-width: 1.07; stroke: #C50084; stroke-linecap: butt;' />
 <line x1='140.69' y1='144.00' x2='155.02' y2='144.00' style='stroke-width: 1.17; stroke: #2A6EBB; stroke-linecap: butt;' />
 <polyline points='151.90,145.80 155.02,144.00 151.90,142.20 ' style='stroke-width: 1.17; stroke: #2A6EBB; stroke-linecap: butt;' />
 <line x1='140.69' y1='144.00' x2='155.02' y2='144.00' style='stroke-width: 1.17; stroke: #00B2A9; stroke-linecap: butt;' />
