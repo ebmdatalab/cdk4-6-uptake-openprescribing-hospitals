@@ -68,9 +68,6 @@ trustData |>
 
 The data is far less interpretable, as different trusts will have different numbers of patients.  We need to normalise the data somehow.  
 
-### Normalise by 12 month use prior to adjuvant
-One option is to normalise trust data after adjuvant in comparison to their use prior to adjuvant.  But some trusts may not have ANY use prior to adjuvant:
-
 
 ## Display Quartiles and Deciles
 
@@ -107,7 +104,7 @@ print(quantilePlot)
   
 ```
 
-### Format the plot
+## Format the plot
 This plot is starting to look usable, so we will add some improved formatting (titles, axis labels, background panel etc)
 
 ```{r}
@@ -115,7 +112,7 @@ quantilePlot+
   theme_classic() +
   #ggsci::scale_color_jama() +
   scale_color_manual(values=BMJ_colours)+
-  theme(panel.grid.major.y = element_line(linewidth = 0.5)) + 
+  theme(panel.grid.major.y = element_line(linewidth = 0.5, colour = "grey")) + 
   scale_y_continuous("% CDK4/6 inhibitor dispensed as abemaciclib",
     labels = scales::percent,
     limits = c(0,0.75),
@@ -124,16 +121,16 @@ quantilePlot+
   scale_x_date("Month",
     date_labels = "%Y",
     date_breaks = "1 years",
-    limits = as.Date(c("2019-01-01","2025-01-01")),
+    limits = as.Date(c("2019-01-01","2025-09-30")),
     expand = c(0,0)
   )+
-  ggtitle("Quantile ranges of percentage abemaciclib by individual NHS Trusts",
-          subtitle = "as a percentage of the trust's total CDK4/6 inhibitor use each month") -> quantilePlot
+  ggtitle("Quantile ranges of abemaciclib use by individual NHS Trusts",
+          subtitle = "as a percentage of the Trust's total CDK4/6 inhibitor DDD each month") -> quantilePlot
 
 quantilePlot
 ```
 
-### Annotate the plot
+## Annotate the plot
 
 It would be useful to annotate the plot with key timeline events (CDF funding, NICE positive appraisal and 90 day time limit)
 
@@ -194,15 +191,17 @@ print(quantilePlot)
 
 
 
+
 ```{r}
-require(ggbrace)
+#require(ggbrace)
+#require(ggplot2)
 require(toOrdinal)
 # Label the Quantiles
 
 quantile_labels <-
   tibble(x = as.Date("2024-12-14"),
-         y = unlist(c(abema_quartile_targets[abema_quartile_targets$year_month==as.Date("2024-12-01"),2:8])),
-         label = names(abema_quartile_targets)[2:8] |> stringr::str_remove_all("pct_")
+         y = unlist(c(abema_quartiles[abema_quartiles$year_month==as.Date("2024-12-01"),2:8])),
+         label = names(abema_quartiles)[2:8] |> stringr::str_remove_all("pct_")
          ) |>
   rowwise() |>
   mutate(num_label = case_when(
@@ -213,7 +212,7 @@ quantile_labels <-
   mutate(label = toOrdinal(num_label))
 
 quantilePlot +
-  xlim(as.Date("2021-01-01"), "2025-03-30") +
+  #xlim(as.Date("2019-01-01"), "2025-03-30") +
   geom_text( data = quantile_labels,
              aes(x=x,
                  y =  `y`,
@@ -233,6 +232,14 @@ quantilePlot +
   geom_text(aes(x=as.Date("2023-12-31"), y=0.15, label = "Slower to adopt\nadjuvant abemaciclib", colour = "Low_line"), size=2.8, hjust=0) +
     geom_line(data = trustData[trustData$new_code == "RXP",],
             aes(x=year_month, y=pct_abema, colour =  "High_line"), lwd=0.6, lty=6) +
-  geom_text(aes(x=as.Date("2024-03-01"), y=0.46, label = "Quicker to adopt\nadjuvant abemaciclib", colour = "High_line"), size=2.8, hjust=1)
+  geom_text(aes(x=as.Date("2024-03-01"), y=0.46, label = "Quicker to adopt\nadjuvant abemaciclib", colour = "High_line"), size=2.8, hjust=1) -> quantilePlot
+
+print(quantilePlot)
 ```
 
+## Export plot for Journal
+
+```{r}
+ggsave(here::here("r/outputs/QuantilePlots_pct_all.svg"), quantilePlot, width = 8, height =6)
+ggsave(here::here("r/outputs/QuantilePlots_pct_all.png"), quantilePlot, dpi = 350, width = 8, height =6)
+```
