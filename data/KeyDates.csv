@@ -9,3 +9,7 @@ Abemaciclib,88000,right,Abemaciclib adjuvant NICE,17/06/2022, NICE,0,20/07/2022,
 Ribociclib,65000,left,Ribociclib first line NICE,16/11/2017, NICE,1,20/12/2017,16/11/2017, F
 Ribociclib,40000,left,Ribociclib second line NICE,26/02/2021, NICE,0.5,31/03/2021,26/02/2021, F
 Ribociclib,75000,left,First line ribociclib survival data: HR 0.76 (0.63-0.93),09/03/2022, OS data,1,09/03/2022,NA, T
+Palbociclib,0, above, PALOMA-2 Trial Published, 17/11/2016, data, 0.5, 17/11/2016, F
+Ribociclib,0, above, MONALEESA-2 Trial Published, 03/11/2016, data, 0.5, 03/11/2016, F
+Abemaciclib,0, above, MONARCH-3 Trial Published, 10/11/2017, data, 0.5, 10/11/2017, F
+
