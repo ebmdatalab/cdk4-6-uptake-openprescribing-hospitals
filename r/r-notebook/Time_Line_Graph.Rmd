@@ -31,6 +31,15 @@ cdk46Data |>
   group_by(year_month, VTM) |>
   summarise(ddd=sum(ddd_quantity)) -> cdk46MonthlyData
 
+cdk46MonthlyData |>
+  group_by(year_month) |>
+  summarise(ddd=sum(ddd)) |>
+  mutate(VTM = "Total", .before=ddd) -> cdk46MonthlyTotals
+
+cdk46MonthlyData |>
+  rows_append(cdk46MonthlyTotals) |>
+  arrange(year_month) -> cdk46MonthlyData
+
 head(cdk46MonthlyData)
 ```
 
@@ -110,9 +119,9 @@ cdk46Plot +
     # Tidy up the y-axis
   scale_y_continuous("Monthly defined daily doses",
                      labels = scales::label_comma(), # Add commas to numbers
-                     limits = c(0, 200000), 
+                     limits = c(0, 350000), 
                      expand = c(0, 0),
-                     breaks = seq(0, 200000, by = 50000))+
+                     breaks = seq(0, 350000, by = 50000))+
   
   # Label x-axis
   xlab("Month")  -> cdk46Plot
