@@ -1,0 +1,9 @@
+[project]
+name = "op-hospitals-cdk46"
+version = "0.1.0"
+description = "Analysis of CDK4/6 inhibitors issue in hospitals in England"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.3.3",
+]
