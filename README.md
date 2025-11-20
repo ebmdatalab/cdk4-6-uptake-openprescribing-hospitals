@@ -1,66 +1,45 @@
-# The Bennett Institute's skeleton notebook environment
+# Trends and variation in the issuing of CDK4/6 inhibitors within NHS Trusts in England
+
+This project examines the uptake of CDK4/6 inhibitors (palbociclib, ribociclib, and abemaciclib) within NHS Trusts in England, including the frequency of dose reductions, and assesses variation in their use both within NHS trusts and across cancer alliances in response to recent approvals and emerging evidence.
+
+## Data Sources
+
+This project makes use of the **Secondary Care Medicines Dataset (SCMD)** hosted by the NHS Business Services Authority. The SCMD contains processed pharmacy stock data from all NHS trusts in England, including cancer therapies. The data is accessed through the publicly available [OpenPrescribing Hospitals platform](https://hospitals.openprescribing.net/).
+
+## Project Structure
+
+This project uses both Python and R for data analysis.
+
+- `data/`: Contains processed datasets including hospital-level CDK4/6 inhibitor data, cancer alliance boundaries, and key dates
+- `r/`: R scripts and notebooks for data analysis, visualization, and report generation
+  - `r/functions/`: Utility functions (e.g., ODS API access)
+  - `r/r-notebook/`: R Markdown notebooks for various analyses
+  - `r/outputs/`: Generated figures and tables
+- `python/`: Python scripts and notebooks for data analysis
+- `pyproject.toml`: Python project configuration and dependencies
 
 
-## Getting started with this skeleton project
+## Usage
 
-This is a skeleton project for creating a reproducible, cross-platform
-analysis notebook, using Docker.
+ The main analyses are conducted in R Markdown notebooks located in `r/r-notebook/`, which generate visualizations and reports examining:
 
-Developers and analysts using this skeleton for new development should
-refer to [`DEVELOPERS.md`](DEVELOPERS.md) for instructions on getting
-started.  Update this `README.md` so it is a suitable introduction to
-your project.
+- Temporal trends in CDK4/6 inhibitor usage
+- Dose reduction patterns
+- Geographic variation across cancer alliances
+- Quantile plots showing distribution of usage
+- Event timelines related to approvals and evidence
 
+## Outputs
 
-## Running Jupyter Lab
+Generated outputs include:
+- Timeline figures showing uptake over time
+- Map visualizations of geographic variation
+- Quantile plots showing distribution patterns
+- Dose reduction analyses
+- Statistical tables (Table 2)
 
-You will need to have installed Git and Docker, please see the
-[`INSTALLATION_GUIDE.md`](INSTALLATION_GUIDE.md) for further details.
+All outputs are saved in `r/outputs/` in both PNG and SVG formats.
 
-Windows and Linux users should double-click the `jupyter-lab` file.
-Users on macOS should double-click `jupyter-lab-mac-os` instead.
+## References
 
-Note: if double-clicking the `jupyter-lab` file opens the file in VS Code, you
-should instead right-click on the file and open it with Git for Windows.
-
-This will build a Docker image with all software requirements installed,
-start a new Jupyter Lab server, and then provide a link to access this
-server.
-
-The first time you run this command it may take some time to download
-and install the necessary software. Subsequent runs should be much
-faster.
-
-Note: if running the command fails with:
-
-```
-docker: Error response from daemon: user declined directory sharing C:\path\to\directory
-```
-
-you should open the Docker dashboard, and then under Settings -> Resources ->
-FileSharing, add the appropriate path.
-
-Once the server starts you should see the URL needed to access it,
-followed by some lines of Jupyter log output, for example:
-<pre>
- -> Connect to notebook with URL:
-
-        <strong>http://localhost:59169/?token=C1atgmXc9IJGXCZy</strong>
-
-    Tip: to open in browser, triple-click the URL, right-click, choose "Open"
-
-[I 2024-08-08 13:13:18.953 ServerApp] jupyter_lsp | extension was successfully linked.
-[I 2024-08-08 13:13:18.959 ServerApp] jupyter_server_terminals | extension was successfully linked.
-[I 2024-08-08 13:13:18.969 ServerApp] jupyterlab | extension was successfully linked.
-...
-[I 2024-08-08 13:13:19.471 ServerApp] Serving notebooks from local directory: /workspace
-[I 2024-08-08 13:13:19.472 ServerApp] Jupyter Server 2.14.0 is running at:
-[I 2024-08-08 13:13:19.472 ServerApp] http://localhost:59169/?token=C1atgmXc9IJGXCZy
-[I 2024-08-08 13:13:19.472 ServerApp]     http://127.0.0.1:59169/lab?token=...
-[I 2024-08-08 13:13:19.472 ServerApp] Use Control-C to stop this server and shut down all kernels.
-</pre>
-
-
-## How to cite
-
-XXX Please change to either a paper (if published) or the repo. You may find it helpful to use Zenodo DOI (see [`DEVELOPERS.md`](DEVELOPERS.md#how-to-invite-people-to-cite) for further information)
+This research contributes to understanding variation in the adoption of novel cancer treatments within the NHS and supports efforts to ensure rapid, widespread, and equitable uptake of effective therapies.
