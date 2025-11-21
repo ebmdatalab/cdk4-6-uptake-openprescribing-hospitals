@@ -22,10 +22,6 @@ axisData <- expand_grid(
                    
 keyDates |>
   mutate(date = as.Date(date, format="%d/%m/%Y")) |>
-  mutate(event_label = str_replace_all(event_label, 
-                                       c("1st line" = "<b style='color:#2E7D32;'>1st Line</b>",
-                                         "2nd line" = "<b style='color:#D32F2F;'>2nd Line</b>",
-                                         "Adjuvant" = "<b style='color:#F57C00;'>Adjuvant</b>"))) |>
   select(VTM, event_date = date, event_label, event_level, event_align) |>
 ggplot() +
   theme_void() +
@@ -62,9 +58,7 @@ ggplot() +
                     label=event_label, hjust=event_align, vjust=if_else(event_level>0, 0,1)), size = 3.5, 
                 fill = NA, label.color = NA, # remove background and outline
                 label.padding = grid::unit(rep(0, 4), "pt") # remove padding
-  ) +
-  labs(caption = "**1st Line:** First line (with aromatase inhibitor),  **2nd Line:** Second line (with fulvestrant),  *n.s.*: Not significant<br/>
-       **OS:** Overall survival, **PFS:** Progression free survival") -> event_timeline_split
+  ) -> event_timeline_split
   
 ggsave(here::here("r/outputs/EventTimeLineSplit.svg"), event_timeline_split, width = 8, height =6)
 ggsave(here::here("r/outputs/EventTimeLineSplit.png"), event_timeline_split, dpi = 350, width = 8, height =6)
