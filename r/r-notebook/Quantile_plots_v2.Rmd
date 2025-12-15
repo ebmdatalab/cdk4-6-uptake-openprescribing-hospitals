@@ -226,6 +226,195 @@ print(quantilePlot)
 ## Export plot for Journal
 
 ```{r}
-ggsave(here::here("r/outputs/QuantilePlots_pct_all.svg"), quantilePlot, width = 8, height =6)
-ggsave(here::here("r/outputs/QuantilePlots_pct_all.png"), quantilePlot, dpi = 350, width = 8, height =6)
+ggsave(here::here("r/outputs/QuantilePlots_pct_abema.svg"), quantilePlot, width = 8, height =6)
+ggsave(here::here("r/outputs/QuantilePlots_pct_abema.png"), quantilePlot, dpi = 350, width = 8, height =6)
+```
+
+## Ribociclib vs All Others
+
+```{r}
+
+trustData |>
+  ungroup() |>
+  mutate(pct_ribo = Ribociclib/total) -> trustDataRibo
+
+
+trustDataRibo |>
+  group_by(year_month) |>
+  summarise(median = quantile(pct_ribo, probs = 0.5, na.rm=T),
+            pct_75 = quantile(pct_ribo, probs = 0.75, na.rm=T),
+            pct_90 = quantile(pct_ribo, probs = 0.9, na.rm=T),
+            pct_95 = quantile(pct_ribo, probs = 0.95, na.rm=T),
+            pct_25 = quantile(pct_ribo, probs = 0.25, na.rm=T),
+            pct_10 = quantile(pct_ribo, probs = 0.1, na.rm=T),
+            pct_05 = quantile(pct_ribo, probs = 0.05, na.rm=T)
+            ) -> ribo_quartiles
+
+
+trustDataRibo |>
+  ggplot() +
+  ylim(0,0.75) + 
+  xlim(as.Date("2019-01-01"), "2024-12-31") +
+  geom_ribbon(aes(ymin = pct_05, ymax = pct_95, x = year_month, fill = "5th-95th percentiles"), stat="identity", data = ribo_quartiles) +
+  geom_ribbon(aes(ymin = pct_10, ymax = pct_90, x = year_month, fill = "10th-90th percentiles"), stat="identity", data = ribo_quartiles) +
+  geom_ribbon(aes(ymin = pct_25, ymax = pct_75, x = year_month, fill = "25th-75th percentiles"), stat="identity", data = ribo_quartiles) +
+  geom_line(lwd=1.1, aes(y=median, x = year_month, linetype = "Median"), colour = BMJ_colours["Ribociclib"], data = ribo_quartiles) +
+  scale_fill_manual(name = "Percentile range",
+                    values = c("5th-95th percentiles" = "grey85", "10th-90th percentiles" = "grey70", "25th-75th percentiles" = "grey50"),
+                    breaks = c("25th-75th percentiles", "10th-90th percentiles", "5th-95th percentiles")) +
+  theme_classic() +
+  scale_color_manual(values=BMJ_colours)+
+  theme(panel.grid.major.y = element_line(linewidth = 0.5, colour = "grey")) + 
+  scale_y_continuous("% CDK4/6 inhibitor dispensed as ribociclib",
+    labels = scales::percent,
+    limits = c(0,0.75),
+    expand = c(0,0)
+  )+
+  scale_x_date("Month",
+    date_labels = "%Y",
+    date_breaks = "1 years",
+    limits = as.Date(c("2019-01-01","2025-01-01")),
+    expand = expansion(mult = c(0, 0.02))
+  ) -> riboQuantilePlot
+
+
+riboQuantilePlot +
+  geom_segment(data=events, 
+               aes(x=year_month, xend=year_month, y = 0, yend= marker, colour = paste0(colour, "_line")),
+               lwd=0.8, lty=1, show.legend = FALSE) +
+  geom_segment(data=filter(events, position == "left"), 
+               aes(x=year_month, xend=year_month-60, y = marker, yend= marker, colour=paste0(colour, "_line")),
+               lwd=0.8, lty=1, show.legend = FALSE) +
+  geom_segment(data=filter(events, position == "right"), 
+               aes(x=year_month, xend=year_month+60, y = marker, yend= marker, colour=paste0(colour, "_line")),
+               lwd=0.8, lty=1, show.legend = FALSE) +
+  geom_segment(data=filter(events, position == "above"), 
+               aes(x=year_month-30, xend=year_month+30, y = marker, yend= marker, colour=paste0(colour, "_line")),
+               lwd=0.8, lty=1, show.legend = FALSE) +
+  geom_text(data=filter(events, position == "left"), 
+               aes(x=year_month - 65, y = marker, colour=colour, 
+                   label = stringr::str_wrap(label, 12)), 
+            size = 2.7, hjust = 1, show.legend = FALSE) +
+  geom_text(data=filter(events, position == "right"), 
+               aes(x=year_month + 65, y = marker, colour=colour, 
+                   label = stringr::str_wrap(label, 12)), 
+            size = 2.7, hjust = 0, show.legend = FALSE) +
+  geom_text(data=filter(events, position == "above"), 
+               aes(x=year_month, y = marker+5, colour=colour, 
+                   label = stringr::str_wrap(label, 12)), 
+            size = 2.7, hjust = 0.5, vjust = 0, show.legend = FALSE) +
+  geom_line(lwd=1.1, aes(y=median, x = year_month, linetype = "Median"), colour = BMJ_colours["Ribociclib"], data = ribo_quartiles) +
+  scale_linetype_manual(values = c("Median" = "solid"), breaks = c("Median")) +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        legend.text = element_text(size = 10),
+        legend.box = "horizontal") +
+  guides(colour = "none",
+         fill = guide_legend(title = NULL, order = 1, ncol = 1, override.aes = list(alpha = 1)),
+         linetype = guide_legend(title = NULL, order = 2, ncol = 1)) -> riboQuantilePlot
+
+print(riboQuantilePlot)
+```
+
+```{r}
+ggsave(here::here("r/outputs/QuantilePlots_pct_ribo.svg"), riboQuantilePlot, width = 8, height =6)
+ggsave(here::here("r/outputs/QuantilePlots_pct_ribo.png"), riboQuantilePlot, dpi = 350, width = 8, height =6)
+```
+
+## Palbociclib vs All Others
+
+```{r}
+
+trustData |>
+  ungroup() |>
+  mutate(pct_palbo = Palbociclib/total) -> trustDataPalbo
+
+trustDataPalbo |>
+  group_by(year_month) |>
+  summarise(median = quantile(pct_palbo, probs = 0.5, na.rm=T),
+            pct_75 = quantile(pct_palbo, probs = 0.75, na.rm=T),
+            pct_90 = quantile(pct_palbo, probs = 0.9, na.rm=T),
+            pct_95 = quantile(pct_palbo, probs = 0.95, na.rm=T),
+            pct_25 = quantile(pct_palbo, probs = 0.25, na.rm=T),
+            pct_10 = quantile(pct_palbo, probs = 0.1, na.rm=T),
+            pct_05 = quantile(pct_palbo, probs = 0.05, na.rm=T)
+            ) -> palbo_quartiles
+
+trustDataPalbo |>
+  ggplot() +
+  ylim(0,1.0) + 
+  xlim(as.Date("2019-01-01"), "2024-12-31") +
+  geom_ribbon(aes(ymin = pct_05, ymax = pct_95, x = year_month, fill = "5th-95th percentiles"), stat="identity", data = palbo_quartiles) +
+  geom_ribbon(aes(ymin = pct_10, ymax = pct_90, x = year_month, fill = "10th-90th percentiles"), stat="identity", data = palbo_quartiles) +
+  geom_ribbon(aes(ymin = pct_25, ymax = pct_75, x = year_month, fill = "25th-75th percentiles"), stat="identity", data = palbo_quartiles) +
+  geom_line(lwd=1.1, aes(y=median, x = year_month, linetype = "Median"), colour = BMJ_colours["Palbociclib"], data = palbo_quartiles) +
+  scale_fill_manual(name = "Percentile range",
+                    values = c("5th-95th percentiles" = "grey85", "10th-90th percentiles" = "grey70", "25th-75th percentiles" = "grey50"),
+                    breaks = c("25th-75th percentiles", "10th-90th percentiles", "5th-95th percentiles")) +
+  theme_classic() +
+  scale_color_manual(values=BMJ_colours)+
+  theme(panel.grid.major.y = element_line(linewidth = 0.5, colour = "grey")) + 
+  scale_y_continuous("% CDK4/6 inhibitor dispensed as palbociclib",
+    labels = scales::percent,
+    limits = c(0,1.0),
+    expand = c(0,0)
+  )+
+  scale_x_date("Month",
+    date_labels = "%Y",
+    date_breaks = "1 years",
+    limits = as.Date(c("2019-01-01","2025-01-01")),
+    expand = expansion(mult = c(0, 0.02))
+  ) -> palboQuantilePlot
+
+tibble(
+  year_month = as.Date(c("2022-06-17", "2022-07-20", "2022-10-18", "2019-11-28", "2019-01-19", "2019-04-02")),
+  marker = c(0.30, 0.38, 0.38, 0.30, 0.50, 0.38),
+  colour = c("Abemaciclib", "Abemaciclib", "Abemaciclib", "Palbociclib", "Abemaciclib", "Abemaciclib"),
+  label = c("Adjuvant abemaciclib CDF funding", "Adjuvant NICE appraisal", "90 days after NICE appraisal",
+            "Palbociclib 2nd line CDF funding", "Abemaciclib 1st line CDF funding", "Abemaciclib 2nd line CDF funding"),
+  position = c("left", "left", "right", "right", "right", "right")
+) -> events_palbo
+
+
+palboQuantilePlot +
+  geom_segment(data=events_palbo, 
+               aes(x=year_month, xend=year_month, y = 0, yend= marker, colour = paste0(colour, "_line")),
+               lwd=0.8, lty=1, show.legend = FALSE) +
+  geom_segment(data=filter(events_palbo, position == "left"), 
+               aes(x=year_month, xend=year_month-60, y = marker, yend= marker, colour=paste0(colour, "_line")),
+               lwd=0.8, lty=1, show.legend = FALSE) +
+  geom_segment(data=filter(events_palbo, position == "right"), 
+               aes(x=year_month, xend=year_month+60, y = marker, yend= marker, colour=paste0(colour, "_line")),
+               lwd=0.8, lty=1, show.legend = FALSE) +
+  geom_segment(data=filter(events_palbo, position == "above"), 
+               aes(x=year_month-30, xend=year_month+30, y = marker, yend= marker, colour=paste0(colour, "_line")),
+               lwd=0.8, lty=1, show.legend = FALSE) +
+  geom_text(data=filter(events_palbo, position == "left"), 
+               aes(x=year_month - 65, y = marker, colour=colour, 
+                   label = stringr::str_wrap(label, 12)), 
+            size = 2.7, hjust = 1, show.legend = FALSE) +
+  geom_text(data=filter(events_palbo, position == "right"), 
+               aes(x=year_month + 65, y = marker, colour=colour, 
+                   label = stringr::str_wrap(label, 12)), 
+            size = 2.7, hjust = 0, show.legend = FALSE) +
+  geom_text(data=filter(events_palbo, position == "above"), 
+               aes(x=year_month, y = marker+5, colour=colour, 
+                   label = stringr::str_wrap(label, 12)), 
+            size = 2.7, hjust = 0.5, vjust = 0, show.legend = FALSE) +
+  geom_line(lwd=1.1, aes(y=median, x = year_month, linetype = "Median"), colour = BMJ_colours["Palbociclib"], data = palbo_quartiles) +
+  scale_linetype_manual(values = c("Median" = "solid"), breaks = c("Median")) +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        legend.text = element_text(size = 10),
+        legend.box = "horizontal") +
+  guides(colour = "none",
+         fill = guide_legend(title = NULL, order = 1, ncol = 1, override.aes = list(alpha = 1)),
+         linetype = guide_legend(title = NULL, order = 2, ncol = 1)) -> palboQuantilePlot
+
+print(palboQuantilePlot)
+```
+
+```{r}
+ggsave(here::here("r/outputs/QuantilePlots_pct_palbo.svg"), palboQuantilePlot, width = 8, height =6)
+ggsave(here::here("r/outputs/QuantilePlots_pct_palbo.png"), palboQuantilePlot, dpi = 350, width = 8, height =6)
 ```
