@@ -117,7 +117,7 @@ quantilePlot+
   #ggsci::scale_color_jama() +
   scale_color_manual(values=BMJ_colours)+
   theme(panel.grid.major.y = element_line(linewidth = 0.5, colour = "grey")) + 
-  scale_y_continuous("% CDK4/6 inhibitor dispensed as abemaciclib",
+  scale_y_continuous("% CDK4/6 inhibitor issued as abemaciclib",
     labels = scales::percent,
     limits = c(0,1.0),
     expand = c(0,0)
@@ -265,7 +265,7 @@ trustDataRibo |>
   theme_classic() +
   scale_color_manual(values=BMJ_colours)+
   theme(panel.grid.major.y = element_line(linewidth = 0.5, colour = "grey")) + 
-  scale_y_continuous("% CDK4/6 inhibitor dispensed as ribociclib",
+  scale_y_continuous("% CDK4/6 inhibitor issued as ribociclib",
     labels = scales::percent,
     limits = c(0,1.0),
     expand = c(0,0)
@@ -354,7 +354,7 @@ trustDataPalbo |>
   theme_classic() +
   scale_color_manual(values=BMJ_colours)+
   theme(panel.grid.major.y = element_line(linewidth = 0.5, colour = "grey")) + 
-  scale_y_continuous("% CDK4/6 inhibitor dispensed as palbociclib",
+  scale_y_continuous("% CDK4/6 inhibitor issued as palbociclib",
     labels = scales::percent,
     limits = c(0,1.0),
     expand = c(0,0)
