@@ -19,17 +19,16 @@ BMJ_colours <- c("Palbociclib"="#2a6ebb", "Abemaciclib"="#c50084","Ribociclib"="
 
 
 # Get the dataset 
-# Requires cleaned data
-cdk46Data <- readRDS(here::here("data/cdk46_op_hosp_clean.RDS")) |>
-  filter(year_month < as.Date("2025-04-01"))
+# Load processed CSV data
+cdk46Data <- readr::read_csv(here::here("data/oph_data_11_25_processed.csv")) |>
+  mutate(Date = as.Date(Date)) |>
+  filter(Date <= as.Date("2024-12-01"))
 
 # agregate the data to VTM & month (i.e. no trust level data needed or formulation)
 cdk46Data |>
-  # get the VTM (ingredient)
-  separate_wider_delim(vmp_name, delim=" ", names = c("VTM", "strength", "form")) |>
-  # summarise the data using month and VTM
-  group_by(year_month, VTM) |>
-  summarise(ddd=sum(ddd_quantity)) -> cdk46MonthlyData
+  # summarise the data using month and VTM (already available as VTM Name)
+  group_by(year_month = Date, VTM = `VTM Name`) |>
+  summarise(ddd = sum(Value)) -> cdk46MonthlyData
 
 cdk46MonthlyData |>
   group_by(year_month) |>
