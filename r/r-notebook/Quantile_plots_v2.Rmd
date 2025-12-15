@@ -22,17 +22,18 @@ require(ggplot2)
 BMJ_colours <- c("Palbociclib"="#1f5189", "Abemaciclib"="#c50084","Ribociclib"="#00b2a9", "Palbociclib_line" = "#2a6ebb", "Abemaciclib_line"="#ff83d6","Ribociclib_line"="#70fff8", "High_line"= "#5e3baa", "Low_line" = "#CD202C")
 
 # Get the dataset 
-# Requires cleaned data
-cdk46Data <- readRDS(here::here("data/cdk46_op_hosp_clean.RDS"))
+# Load processed CSV data
+cdk46Data <- readr::read_csv(here::here("data/oph_data_11_25_processed.csv")) |>
+  mutate(Date = as.Date(Date))
 
 # agregate the data to VTM & month & trust
 cdk46Data |>
   # exclude dates in 2025
-  filter(year_month < as.Date("2025-01-01")) |>
+  filter(Date < as.Date("2025-01-01")) |>
   # summarise the data using month and organisation
-  group_by(year_month, vtm_name, new_code ) |>
+  group_by(year_month = Date, vtm_name = `VTM Name`, new_code = `Trust Code`) |>
   # As not comparing across drugs - can simply use quantity rather than dose
-  summarise(qty=sum(ddd_quantity)) -> trustData
+  summarise(qty=sum(Value)) -> trustData
 
 trustData |>
   pivot_wider(id_cols = c(year_month, new_code), values_from = qty, names_from = vtm_name) |>
