@@ -9,16 +9,18 @@ require(tidyverse)
 require(gtsummary)
 require(flextable)
 
-cdk46Data <- readRDS(here::here("data/cdk46_op_hosp_clean.RDS"))
+cdk46Data <- read_csv(here::here("data/oph_data_11_25_processed.csv")) |>
+  rename(year_month = Date, vmp_code = `VMP Code`, vmp_name = `VMP Name`, 
+         vtm_name = `VTM Name`, ddd_quantity = Value)
 
 cdk46Data|>
   mutate(year = year(year_month))|>
   rowwise()|>
-  mutate(vtm = stringr::str_split_1(as.character(vmp_name), " ")[1]) |>
+  mutate(vtm = vtm_name) |>
   mutate(vmp_short_name = paste(stringr::str_split_1(as.character(vmp_name), " ")[2:3], collapse=" ")) |>
   filter(year < 2025)|>
   group_by(vtm, vmp_short_name, vmp_code, year) |>
-  summarise(quantity = sum(quantity)) |>
+  summarise(quantity = sum(ddd_quantity)) |>
   pivot_wider(names_from = year, values_from = quantity) |>
   mutate(vmp = paste0(vmp_short_name, " (", vmp_code, ")"), .after = vtm) |>
   mutate(sort_value = as.numeric(stringr::str_split_1(vmp, "mg")[1])) |>
@@ -36,10 +38,7 @@ cdk46Data|>
 
 cdk46Data|>
   mutate(year = year(year_month))|>
-  rowwise()|>
-  mutate(vtm = stringr::str_split_1(as.character(vmp_name), " ")[1]) |>
-  mutate(vmp_short_name = paste(stringr::str_split_1(as.character(vmp_name), " ")[2:3], collapse=" ")) |>
-  filter(year < 2025)|>
+  mutate(vtm = vtm_name) |>
   group_by(vtm, year) |>
   summarise(ddd_quantity = sum(ddd_quantity)) |>
   pivot_wider(names_from = year, values_from = ddd_quantity) |>
