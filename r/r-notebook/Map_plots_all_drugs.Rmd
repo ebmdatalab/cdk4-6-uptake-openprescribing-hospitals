@@ -1,11 +1,11 @@
 ---
-title: "Maps Plot - All CDK4/6 Inhibitor Comparisons"
+title: "Maps Plot - CDK4/6 Inhibitor Proportions"
 output:
   html_document:
     df_print: paged
 ---
 
-This notebook creates cancer alliance maps comparing all three CDK4/6 inhibitors: palbociclib, ribociclib, and abemaciclib. Each comparison shows the percentage of one drug relative to the sum of two drugs.
+This notebook creates cancer alliance maps showing the proportion of each CDK4/6 inhibitor (palbociclib, ribociclib, and abemaciclib) relative to the total usage of all three drugs combined.
 
 ## Load the data
 
@@ -83,7 +83,7 @@ combinedData <- combinedData |>
   select(-ICB_upper)
 ```
 
-## Calculate percentages for each drug pair
+## Calculate percentages for each drug relative to total usage
 
 ```{r}
 # Filter to 2020 and 2024 data and aggregate by Cancer Alliance
@@ -95,18 +95,16 @@ allianceData <- combinedData |>
   group_by(year, Cancer_Alliance) |>
   summarise(across(c(Ribociclib, Palbociclib, Abemaciclib), sum), .groups = "drop")
 
-# Calculate percentages for all 6 comparisons
+# Calculate total usage for each year and alliance
+allianceData <- allianceData |>
+  mutate(total_usage = Ribociclib + Palbociclib + Abemaciclib)
+
+# Calculate percentages for each drug relative to total usage of all three drugs
 allianceData <- allianceData |>
   mutate(
-    # Ribociclib vs Palbociclib 
-    pct_ribo_vs_palbo = 100 * Ribociclib / (Ribociclib + Palbociclib),
-    pct_palbo_vs_ribo = 100 * Palbociclib / (Palbociclib + Ribociclib),
-    # Abemaciclib vs Palbociclib
-    pct_abema_vs_palbo = 100 * Abemaciclib / (Abemaciclib + Palbociclib),
-    pct_palbo_vs_abema = 100 * Palbociclib / (Palbociclib + Abemaciclib),
-    # Abemaciclib vs Ribociclib
-    pct_abema_vs_ribo = 100 * Abemaciclib / (Abemaciclib + Ribociclib),
-    pct_ribo_vs_abema = 100 * Ribociclib / (Ribociclib + Abemaciclib)
+    pct_ribociclib = 100 * Ribociclib / total_usage,
+    pct_palbociclib = 100 * Palbociclib / total_usage,
+    pct_abemaciclib = 100 * Abemaciclib / total_usage
   )
 
 make_change_table <- function(data, pct_col, new_name) {
@@ -121,21 +119,34 @@ make_change_table <- function(data, pct_col, new_name) {
     )
 }
 
-ribo_vs_palbo <- make_change_table(allianceData, "pct_ribo_vs_palbo", "ribo_palbo")
-palbo_vs_ribo <- make_change_table(allianceData, "pct_palbo_vs_ribo", "palbo_ribo")
-abema_vs_palbo <- make_change_table(allianceData, "pct_abema_vs_palbo", "abema_palbo")
-palbo_vs_abema <- make_change_table(allianceData, "pct_palbo_vs_abema", "palbo_abema")
-abema_vs_ribo <- make_change_table(allianceData, "pct_abema_vs_ribo", "abema_ribo")
-ribo_vs_abema <- make_change_table(allianceData, "pct_ribo_vs_abema", "ribo_abema")
+# Create tables showing percentages for each year
+ribociclib_pct <- allianceData |>
+  select(year, Cancer_Alliance, pct_ribociclib) |>
+  pivot_wider(id_cols = "Cancer_Alliance", names_from = year, values_from = pct_ribociclib) |>
+  rename(
+    ribociclib_2020 = `2020`,
+    ribociclib_2024 = `2024`
+  )
 
-allChanges <- ribo_vs_palbo |>
-  left_join(palbo_vs_ribo, by = "Cancer_Alliance") |>
-  left_join(abema_vs_palbo, by = "Cancer_Alliance") |>
-  left_join(palbo_vs_abema, by = "Cancer_Alliance") |>
-  left_join(abema_vs_ribo, by = "Cancer_Alliance") |>
-  left_join(ribo_vs_abema, by = "Cancer_Alliance")
+palbociclib_pct <- allianceData |>
+  select(year, Cancer_Alliance, pct_palbociclib) |>
+  pivot_wider(id_cols = "Cancer_Alliance", names_from = year, values_from = pct_palbociclib) |>
+  rename(
+    palbociclib_2020 = `2020`,
+    palbociclib_2024 = `2024`
+  )
 
-allChanges
+abemaciclib_pct <- allianceData |>
+  select(year, Cancer_Alliance, pct_abemaciclib) |>
+  pivot_wider(id_cols = "Cancer_Alliance", names_from = year, values_from = pct_abemaciclib) |>
+  rename(
+    abemaciclib_2020 = `2020`,
+    abemaciclib_2024 = `2024`
+  )
+
+allPercentages <- ribociclib_pct |>
+  left_join(palbociclib_pct, by = "Cancer_Alliance") |>
+  left_join(abemaciclib_pct, by = "Cancer_Alliance")
 ```
 
 ## Load shapefile and join data
@@ -143,7 +154,7 @@ allChanges
 ```{r}
 shp <- read_sf(here::here("data/map/Cancer_Alliances_July_2023_Boundaries/CAL_JUL_2023_EN_BFE.shp"))
 
-mapData <- allChanges |>
+mapData <- allPercentages |>
   mutate(CAL23NM = str_remove(Cancer_Alliance, " Cancer Alliance")) |>
   mutate(CAL23NM = str_replace(CAL23NM, "Humber, Coast and Vale", "Humber and North Yorkshire")) |>
   mutate(CAL23NM = str_replace(CAL23NM, "RM Partners", "West London")) |>
@@ -157,253 +168,119 @@ shp_with_data <- shp |>
 
 ```{r}
 
-create_comparison_figure <- function(data, col_2020, col_2024, col_change, pct_label) {
-  
-  # Scale for change map (right) - dark blue to white to dark red
-  change_scale <- scale_fill_gradient2(name = 'Percentage point\nchange', 
-                                       low = "#08306b", mid = "white", high = "#67000d",
-                                       midpoint = 0,
-                                       limits = c(-50, 50))
-  
-  # Scale for left maps - white to dark blue
-  gray_scale <- scale_fill_gradient(low = "white", high = "#08306b", 
-                                    limits = c(0, 100), 
-                                    name = pct_label)
-  
-  # Change map (main, on the right)
-  changeMap <- ggplot(data) +
-    geom_sf(aes(fill = .data[[col_change]]), color = "black") +
-    change_scale +
-    theme_void()
-  
-  # 2020 map (top left)
-  baselineMap <- ggplot(data) +
-    geom_sf(aes(fill = .data[[col_2020]]), color = "black") +
-    gray_scale +
-    guides(fill = "none") +
-    ggtitle('2020') +
-    theme_void()
-  
-  # 2024 map (bottom left)
-  currentMap <- ggplot(data) +
+create_percentage_figure <- function(data, col_2024, pct_label) {
+
+  pct_scale <- scale_fill_viridis_c(limits = c(0, 100),
+                                    name = pct_label,
+                                    option = "plasma",
+                                    direction = -1)  # Reverse so higher values are darker
+
+  # Percentage map with legend
+  pctMap <- ggplot(data) +
     geom_sf(aes(fill = .data[[col_2024]]), color = "black") +
-    gray_scale +
-    guides(fill = "none") +
-    ggtitle('2024') +
-    theme_void()
-  
-  # Extract legend for grayscale maps
-  legend_plot <- ggplot(data) +
-    geom_sf(aes(fill = .data[[col_2020]]), color = "black") +
-    gray_scale +
+    pct_scale +
     guides(fill = guide_colourbar(title.position = "top", title.hjust = 0.5)) +
     theme_void()
-  
-  gray_legend <- get_legend(legend_plot)
-  
-  # Layout: 2020/2024 stacked on left with legend, change map on right
-  lay <- rbind(c(1,1, 4, 5,5,5),
-               c(1,1, 4, 5,5,5),
-               c(2,2, 4, 5,5,5),
-               c(2,2, 4, 5,5,5))
-  
-  figure <- grid.arrange(baselineMap, currentMap, gray_legend, changeMap, layout_matrix = lay)
-  
-  return(figure)
+
+  return(pctMap)
 }
 ```
 
-## Figure 1: Ribociclib % (of Ribo + Palbo)
+## Figure 1: Ribociclib % of total CDK4/6 inhibitors (2024)
 
-```{r fig.width=9, fig.height=6}
-ribo_palbo_plot <- create_comparison_figure(
-  shp_with_data, 
-  "ribo_palbo_2020", "ribo_palbo_2024", "ribo_palbo_change",
-  "% Ribociclib\n(Ribociclib + Palbociclib)"
+```{r fig.width=6, fig.height=6}
+ribociclib_plot <- create_percentage_figure(
+  shp_with_data,
+  "ribociclib_2024",
+  "% Ribociclib\n(of total CDK4/6 inhibitors)"
 )
 
-ribo_palbo_plot
+ribociclib_plot
 ```
 
-## Figure 2: Palbociclib % (of Palbo + Ribo)
+## Figure 2: Palbociclib % of total CDK4/6 inhibitors (2024)
 
-```{r fig.width=9, fig.height=6}
-palbo_ribo_plot <- create_comparison_figure(
-  shp_with_data, 
-  "palbo_ribo_2020", "palbo_ribo_2024", "palbo_ribo_change",
-  "% Palbociclib\n(Palbociclib + Ribociclib)"
+```{r fig.width=6, fig.height=6}
+palbociclib_plot <- create_percentage_figure(
+  shp_with_data,
+  "palbociclib_2024",
+  "% Palbociclib\n(of total CDK4/6 inhibitors)"
 )
 
-palbo_ribo_plot
+palbociclib_plot
 ```
 
-## Figure 3: Abemaciclib % (of Abema + Palbo)
+## Figure 3: Abemaciclib % of total CDK4/6 inhibitors (2024)
 
-```{r fig.width=9, fig.height=6}
-abema_palbo_plot <- create_comparison_figure(
-  shp_with_data, 
-  "abema_palbo_2020", "abema_palbo_2024", "abema_palbo_change",
-  "% Abemaciclib\n(Abemaciclib + Palbociclib)"
+```{r fig.width=6, fig.height=6}
+abemaciclib_plot <- create_percentage_figure(
+  shp_with_data,
+  "abemaciclib_2024",
+  "% Abemaciclib\n(of total CDK4/6 inhibitors)"
 )
 
-abema_palbo_plot
-```
-
-## Figure 4: Palbociclib % (of Palbo + Abema)
-
-```{r fig.width=9, fig.height=6}
-palbo_abema_plot <- create_comparison_figure(
-  shp_with_data, 
-  "palbo_abema_2020", "palbo_abema_2024", "palbo_abema_change",
-  "% Palbociclib\n(Palbociclib + Abemaciclib)"
-)
-
-palbo_abema_plot
-```
-
-## Figure 5: Abemaciclib % (of Abema + Ribo)
-
-```{r fig.width=9, fig.height=6}
-abema_ribo_plot <- create_comparison_figure(
-  shp_with_data, 
-  "abema_ribo_2020", "abema_ribo_2024", "abema_ribo_change",
-  "% Abemaciclib\n(Abemaciclib + Ribociclib)"
-)
-
-abema_ribo_plot
-```
-
-## Figure 6: Ribociclib % (of Ribo + Abema)
-
-```{r fig.width=9, fig.height=6}
-ribo_abema_plot <- create_comparison_figure(
-  shp_with_data, 
-  "ribo_abema_2020", "ribo_abema_2024", "ribo_abema_change",
-  "% Ribociclib\n(Ribociclib + Abemaciclib)"
-)
-
-ribo_abema_plot
+abemaciclib_plot
 ```
 
 ## Summary tables
 
 ```{r}
-# Ribociclib vs Palbociclib
-ribo_vs_palbo |>
+# Ribociclib percentage of total CDK4/6 inhibitors
+ribociclib_pct |>
   gt() |>
-  fmt_number(columns = c("ribo_palbo_2020", "ribo_palbo_2024", "ribo_palbo_change"), decimals = 1) |>
+  fmt_number(columns = c("ribociclib_2020", "ribociclib_2024"), decimals = 1) |>
   cols_label(
-    ribo_palbo_2020 = "2020 (%)",
-    ribo_palbo_2024 = "2024 (%)",
-    ribo_palbo_change = "Change (pp)"
+    ribociclib_2020 = "2020 (%)",
+    ribociclib_2024 = "2024 (%)"
   ) |>
-  tab_header(title = "Ribociclib % (of Ribociclib + Palbociclib)")
+  tab_header(title = "Ribociclib % (of total CDK4/6 inhibitors)")
 ```
 
 ```{r}
-# Palbociclib vs Ribociclib
-palbo_vs_ribo |>
+# Palbociclib percentage of total CDK4/6 inhibitors
+palbociclib_pct |>
   gt() |>
-  fmt_number(columns = c("palbo_ribo_2020", "palbo_ribo_2024", "palbo_ribo_change"), decimals = 1) |>
+  fmt_number(columns = c("palbociclib_2020", "palbociclib_2024"), decimals = 1) |>
   cols_label(
-    palbo_ribo_2020 = "2020 (%)",
-    palbo_ribo_2024 = "2024 (%)",
-    palbo_ribo_change = "Change (pp)"
+    palbociclib_2020 = "2020 (%)",
+    palbociclib_2024 = "2024 (%)"
   ) |>
-  tab_header(title = "Palbociclib % (of Palbociclib + Ribociclib)")
+  tab_header(title = "Palbociclib % (of total CDK4/6 inhibitors)")
 ```
 
 ```{r}
-# Abemaciclib vs Palbociclib
-abema_vs_palbo |>
+# Abemaciclib percentage of total CDK4/6 inhibitors
+abemaciclib_pct |>
   gt() |>
-  fmt_number(columns = c("abema_palbo_2020", "abema_palbo_2024", "abema_palbo_change"), decimals = 1) |>
+  fmt_number(columns = c("abemaciclib_2020", "abemaciclib_2024"), decimals = 1) |>
   cols_label(
-    abema_palbo_2020 = "2020 (%)",
-    abema_palbo_2024 = "2024 (%)",
-    abema_palbo_change = "Change (pp)"
+    abemaciclib_2020 = "2020 (%)",
+    abemaciclib_2024 = "2024 (%)"
   ) |>
-  tab_header(title = "Abemaciclib % (of Abemaciclib + Palbociclib)")
-```
-
-```{r}
-# Palbociclib vs Abemaciclib
-palbo_vs_abema |>
-  gt() |>
-  fmt_number(columns = c("palbo_abema_2020", "palbo_abema_2024", "palbo_abema_change"), decimals = 1) |>
-  cols_label(
-    palbo_abema_2020 = "2020 (%)",
-    palbo_abema_2024 = "2024 (%)",
-    palbo_abema_change = "Change (pp)"
-  ) |>
-  tab_header(title = "Palbociclib % (of Palbociclib + Abemaciclib)")
-```
-
-```{r}
-# Abemaciclib vs Ribociclib
-abema_vs_ribo |>
-  gt() |>
-  fmt_number(columns = c("abema_ribo_2020", "abema_ribo_2024", "abema_ribo_change"), decimals = 1) |>
-  cols_label(
-    abema_ribo_2020 = "2020 (%)",
-    abema_ribo_2024 = "2024 (%)",
-    abema_ribo_change = "Change (pp)"
-  ) |>
-  tab_header(title = "Abemaciclib % (of Abemaciclib + Ribociclib)")
-```
-
-```{r}
-# Ribociclib vs Abemaciclib
-ribo_vs_abema |>
-  gt() |>
-  fmt_number(columns = c("ribo_abema_2020", "ribo_abema_2024", "ribo_abema_change"), decimals = 1) |>
-  cols_label(
-    ribo_abema_2020 = "2020 (%)",
-    ribo_abema_2024 = "2024 (%)",
-    ribo_abema_change = "Change (pp)"
-  ) |>
-  tab_header(title = "Ribociclib % (of Ribociclib + Abemaciclib)")
+  tab_header(title = "Abemaciclib % (of total CDK4/6 inhibitors)")
 ```
 
 ## Export plots for Journal
 
 ```{r}
-# Figure 1: Ribociclib vs Palbociclib
-ggsave(here::here("r/outputs/Ribo_vs_Palbo_Map.svg"), ribo_palbo_plot, width = 9, height = 6)
-ggsave(here::here("r/outputs/Ribo_vs_Palbo_Map.png"), ribo_palbo_plot, dpi = 350, width = 9, height = 6)
+# Figure 1: Ribociclib percentage of total CDK4/6 inhibitors
+ggsave(here::here("r/outputs/Ribociclib_Percentage_Map.svg"), ribociclib_plot, width = 6, height = 6)
+ggsave(here::here("r/outputs/Ribociclib_Percentage_Map.png"), ribociclib_plot, dpi = 350, width = 6, height = 6)
 
-# Figure 2: Palbociclib vs Ribociclib
-ggsave(here::here("r/outputs/Palbo_vs_Ribo_Map.svg"), palbo_ribo_plot, width = 9, height = 6)
-ggsave(here::here("r/outputs/Palbo_vs_Ribo_Map.png"), palbo_ribo_plot, dpi = 350, width = 9, height = 6)
+# Figure 2: Palbociclib percentage of total CDK4/6 inhibitors
+ggsave(here::here("r/outputs/Palbociclib_Percentage_Map.svg"), palbociclib_plot, width = 6, height = 6)
+ggsave(here::here("r/outputs/Palbociclib_Percentage_Map.png"), palbociclib_plot, dpi = 350, width = 6, height = 6)
 
-# Figure 3: Abemaciclib vs Palbociclib
-ggsave(here::here("r/outputs/Abema_vs_Palbo_Map.svg"), abema_palbo_plot, width = 9, height = 6)
-ggsave(here::here("r/outputs/Abema_vs_Palbo_Map.png"), abema_palbo_plot, dpi = 350, width = 9, height = 6)
-
-# Figure 4: Palbociclib vs Abemaciclib
-ggsave(here::here("r/outputs/Palbo_vs_Abema_Map.svg"), palbo_abema_plot, width = 9, height = 6)
-ggsave(here::here("r/outputs/Palbo_vs_Abema_Map.png"), palbo_abema_plot, dpi = 350, width = 9, height = 6)
-
-# Figure 5: Abemaciclib vs Ribociclib
-ggsave(here::here("r/outputs/Abema_vs_Ribo_Map.svg"), abema_ribo_plot, width = 9, height = 6)
-ggsave(here::here("r/outputs/Abema_vs_Ribo_Map.png"), abema_ribo_plot, dpi = 350, width = 9, height = 6)
-
-# Figure 6: Ribociclib vs Abemaciclib
-ggsave(here::here("r/outputs/Ribo_vs_Abema_Map.svg"), ribo_abema_plot, width = 9, height = 6)
-ggsave(here::here("r/outputs/Ribo_vs_Abema_Map.png"), ribo_abema_plot, dpi = 350, width = 9, height = 6)
+# Figure 3: Abemaciclib percentage of total CDK4/6 inhibitors
+ggsave(here::here("r/outputs/Abemaciclib_Percentage_Map.svg"), abemaciclib_plot, width = 6, height = 6)
+ggsave(here::here("r/outputs/Abemaciclib_Percentage_Map.png"), abemaciclib_plot, dpi = 350, width = 6, height = 6)
 
 
-saveRDS(ribo_vs_palbo, here::here("r/r-notebook/ribo_vs_palbo_change_table.RDS"))
-saveRDS(palbo_vs_ribo, here::here("r/r-notebook/palbo_vs_ribo_change_table.RDS"))
-saveRDS(abema_vs_palbo, here::here("r/r-notebook/abema_vs_palbo_change_table.RDS"))
-saveRDS(palbo_vs_abema, here::here("r/r-notebook/palbo_vs_abema_change_table.RDS"))
-saveRDS(abema_vs_ribo, here::here("r/r-notebook/abema_vs_ribo_change_table.RDS"))
-saveRDS(ribo_vs_abema, here::here("r/r-notebook/ribo_vs_abema_change_table.RDS"))
+saveRDS(ribociclib_pct, here::here("r/r-notebook/ribociclib_percentage_table.RDS"))
+saveRDS(palbociclib_pct, here::here("r/r-notebook/palbociclib_percentage_table.RDS"))
+saveRDS(abemaciclib_pct, here::here("r/r-notebook/abemaciclib_percentage_table.RDS"))
 
-write_csv(ribo_vs_palbo, here::here("r/outputs/Ribo_vs_Palbo_change_table.csv"))
-write_csv(palbo_vs_ribo, here::here("r/outputs/Palbo_vs_Ribo_change_table.csv"))
-write_csv(abema_vs_palbo, here::here("r/outputs/Abema_vs_Palbo_change_table.csv"))
-write_csv(palbo_vs_abema, here::here("r/outputs/Palbo_vs_Abema_change_table.csv"))
-write_csv(abema_vs_ribo, here::here("r/outputs/Abema_vs_Ribo_change_table.csv"))
-write_csv(ribo_vs_abema, here::here("r/outputs/Ribo_vs_Abema_change_table.csv"))
+write_csv(ribociclib_pct, here::here("r/outputs/Ribociclib_Percentage_table.csv"))
+write_csv(palbociclib_pct, here::here("r/outputs/Palbociclib_Percentage_table.csv"))
+write_csv(abemaciclib_pct, here::here("r/outputs/Abemaciclib_Percentage_table.csv"))
 ```
