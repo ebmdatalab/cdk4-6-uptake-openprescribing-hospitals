@@ -60,5 +60,5 @@ ggplot() +
                 label.padding = grid::unit(rep(0, 4), "pt") # remove padding
   ) -> event_timeline_split
   
-ggsave(here::here("r/outputs/EventTimeLineSplit.svg"), event_timeline_split, width = 8, height =6)
-ggsave(here::here("r/outputs/EventTimeLineSplit.png"), event_timeline_split, dpi = 350, width = 8, height =6)
+ggsave(here::here("outputs/EventTimeLineSplit.svg"), event_timeline_split, width = 8, height =6)
+ggsave(here::here("outputs/EventTimeLineSplit.png"), event_timeline_split, dpi = 350, width = 8, height =6)
