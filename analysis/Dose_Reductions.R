@@ -17,8 +17,11 @@ doseSummary <- cdk46Data |>
   mutate(vtm = stringr::str_split_1(as.character(`VMP Name`), " ")[1]) |>
   mutate(strength = stringr::str_split_1(as.character(`VMP Name`), " ")[2]) |>
   mutate(strength_mg = as.numeric(stringr::str_remove(strength, "mg"))) |>
-  # Extract DDD value from Unit column (e.g., "DDD (94.0 mg)" -> 94.0)
-  mutate(ddd_mg = as.numeric(stringr::str_extract(Unit, "\\d+\\.?\\d*"))) |>
+  # Extract DDD value from Unit column (e.g., "DDD (94.0 mg)" or "DDD (0.3 g)")
+  mutate(ddd_value = as.numeric(stringr::str_extract(Unit, "\\d+\\.?\\d*"))) |>
+  mutate(ddd_unit = stringr::str_extract(Unit, "(mg|g)")) |>
+  # Convert to mg if unit is grams
+  mutate(ddd_mg = if_else(ddd_unit == "g", ddd_value * 1000, ddd_value)) |>
   # Convert DDD to tablet quantity
   mutate(quantity = (Value * ddd_mg) / strength_mg) |>
   filter(vtm != "Ribociclib") |>
