@@ -173,3 +173,21 @@ ggsave(here("outputs/Cancer_Alliance_Stacked_Bar.png"), combined_plot, dpi = 350
 
 write_csv(summary_table_2024, here("outputs/Cancer_Alliance_Percentages_2024.csv"))
 write_csv(summary_table_2021, here("outputs/Cancer_Alliance_Percentages_2021.csv"))
+
+# Calculate change in each drug's percentage between 2021 and 2024
+change_data <- allianceData |>
+  select(Cancer_Alliance, year, pct_ribociclib, pct_palbociclib, pct_abemaciclib) |>
+  mutate(Cancer_Alliance = str_remove(Cancer_Alliance, " Cancer Alliance")) |>
+  pivot_wider(
+    names_from = year,
+    values_from = c(pct_ribociclib, pct_palbociclib, pct_abemaciclib)
+  ) |>
+  mutate(
+    change_ribociclib = pct_ribociclib_2024 - pct_ribociclib_2021,
+    change_palbociclib = pct_palbociclib_2024 - pct_palbociclib_2021,
+    change_abemaciclib = pct_abemaciclib_2024 - pct_abemaciclib_2021
+  ) |>
+  select(Cancer_Alliance, change_ribociclib, change_palbociclib, change_abemaciclib) |>
+  arrange(desc(change_abemaciclib))
+
+write_csv(change_data, here("outputs/Cancer_Alliance_Percentages_Change_2021_2024.csv"))
