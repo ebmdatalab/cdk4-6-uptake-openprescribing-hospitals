@@ -12,39 +12,36 @@ options(message = FALSE)
 
 
 cdk46Data <- readr::read_csv(here::here("data/oph_data_11_25_processed.csv")) |>
-  mutate(Date = as.Date(Date))
+  mutate(Date = as.Date(Date)) |>
+  filter(!is.na(Cancer_Alliance) & Cancer_Alliance != "")
 
-# Aggregate the data to VTM & month for ICBs
+# Aggregate directly by Cancer Alliance (data already has Cancer_Alliance from trust-information)
 cdk46Data |>
-  group_by(year_month = Date, VTM = `VTM Name`, ICB_name = ICB) |>
-  summarise(ddd = sum(Value)) -> cdk46ICBData
+  group_by(year_month = Date, VTM = `VTM Name`, Cancer_Alliance) |>
+  summarise(ddd = sum(Value), .groups = "drop") -> cdk46AllianceData
 
-head(cdk46ICBData)
+head(cdk46AllianceData)
 
 # Prepare combined data with all three drugs
-# Extract each drug separately
-ribo <- cdk46ICBData |>
-  ungroup() |>
+ribo <- cdk46AllianceData |>
   filter(VTM == "Ribociclib") |>
-  select(-VTM) |> 
+  select(-VTM) |>
   rename(Ribociclib = ddd)
 
-palbo <- cdk46ICBData |>
-  ungroup() |>
+palbo <- cdk46AllianceData |>
   filter(VTM == "Palbociclib") |>
-  select(-VTM) |> 
+  select(-VTM) |>
   rename(Palbociclib = ddd)
 
-abema <- cdk46ICBData |>
-  ungroup() |>
+abema <- cdk46AllianceData |>
   filter(VTM == "Abemaciclib") |>
-  select(-VTM) |> 
+  select(-VTM) |>
   rename(Abemaciclib = ddd)
 
 # Combine all three drugs
 combinedData <- ribo |>
-  left_join(palbo) |>
-  left_join(abema)
+  full_join(palbo, by = c("year_month", "Cancer_Alliance")) |>
+  full_join(abema, by = c("year_month", "Cancer_Alliance"))
 
 # Replace NA with 0 for all drugs (may not be available in all periods)
 combinedData <- combinedData |>
@@ -54,23 +51,12 @@ combinedData <- combinedData |>
     Abemaciclib = replace_na(Abemaciclib, 0)
   )
 
-# Add Cancer Alliance information
-alliances <- read_csv(here::here("data/CancerAlliances.csv")) |>
-  mutate(ICB_upper = toupper(paste("NHS", ICS))) 
-
-combinedData <- combinedData |>
-  rename(ICB = ICB_name) |>
-  mutate(ICB_upper = toupper(ICB)) |>
-  left_join(alliances, by = "ICB_upper") |>
-  select(-ICB_upper)
-
-# Calculate percentages for each drug relative to total usage
 # Filter to 2020 and 2024 data and aggregate by Cancer Alliance
 allianceData <- combinedData |>
   filter(year_month >= as.Date("2020-01-01") & year_month <= as.Date("2024-12-31")) |>
   filter(year_month >= as.Date("2024-01-01") | year_month <= as.Date("2020-12-31")) |>
   mutate(year = year(year_month)) |>
-  select(-year_month, -ICB, -Region, -ICS) |>
+  select(-year_month) |>
   group_by(year, Cancer_Alliance) |>
   summarise(across(c(Ribociclib, Palbociclib, Abemaciclib), sum), .groups = "drop")
 
@@ -127,17 +113,28 @@ allPercentages <- ribociclib_pct |>
   left_join(palbociclib_pct, by = "Cancer_Alliance") |>
   left_join(abemaciclib_pct, by = "Cancer_Alliance")
 
-# Load shapefile and join data
+# Load shapefile and mapping for name corrections
 shp <- read_sf(here::here("data/map/Cancer_Alliances_July_2023_Boundaries/CAL_JUL_2023_EN_BFE.shp"))
+shapefile_mapping <- read_csv(here::here("data/shapefile_cancer_alliance_mapping.csv"))
 
+# Map shapefile CAL23NM to trust_information names (for corrections and East of England merge)
+shp <- shp |>
+  left_join(shapefile_mapping, by = c("CAL23NM" = "shapefile_CAL23NM")) |>
+  mutate(merged_name = coalesce(trust_information_name, CAL23NM))
+
+# Combine East of England polygons (merged in trust-information but not yet in shapefile)
+shp <- shp |>
+  group_by(merged_name) |>
+  summarise(.groups = "drop")
+
+# Prepare map data: Cancer Alliance base name (strip " Cancer Alliance")
+# Matches shapefile CAL23NM for most; mapping file handles exceptions
 mapData <- allPercentages |>
-  mutate(CAL23NM = str_remove(Cancer_Alliance, " Cancer Alliance")) |>
-  mutate(CAL23NM = str_replace(CAL23NM, "Humber, Coast and Vale", "Humber and North Yorkshire")) |>
-  mutate(CAL23NM = str_replace(CAL23NM, "RM Partners", "West London")) |>
+  mutate(merged_name = str_remove(Cancer_Alliance, " Cancer Alliance")) |>
   select(-Cancer_Alliance)
 
 shp_with_data <- shp |>
-  left_join(mapData, by = c("CAL23NM" = "CAL23NM"))
+  left_join(mapData, by = c("merged_name" = "merged_name"))
 
 # Create map plotting function
 create_percentage_figure <- function(data, col_2024, pct_label, show_legend = TRUE) {
