@@ -1,19 +1,3 @@
----
-title: "Maps Plot - CDK4/6 Inhibitor Proportions"
-output:
-  html_document:
-    df_print: paged
----
-
-This notebook creates cancer alliance maps showing the proportion of each CDK4/6 inhibitor (palbociclib, ribociclib, and abemaciclib) relative to the total usage of all three drugs combined.
-
-## Load the data
-
-```{r message=FALSE, warning=FALSE}
-
-knitr::opts_chunk$set(
-	warning =  FALSE, message = FALSE
-)
 
 require(ggplot2)
 require(tidyverse)
@@ -23,43 +7,41 @@ require(sf)
 require(cowplot)
 require(gridExtra)
 
+options(warn = -1)
+options(message = FALSE)
+
+
 cdk46Data <- readr::read_csv(here::here("data/oph_data_11_25_processed.csv")) |>
-  mutate(Date = as.Date(Date))
+  mutate(Date = as.Date(Date)) |>
+  filter(!is.na(Cancer_Alliance) & Cancer_Alliance != "")
 
-# agregate the data to VTM & month for ICBs
+# Aggregate directly by Cancer Alliance (data already has Cancer_Alliance from trust-information)
 cdk46Data |>
-  group_by(year_month = Date, VTM = `VTM Name`, ICB_name = ICB) |>
-  summarise(ddd = sum(Value)) -> cdk46ICBData
+  group_by(year_month = Date, VTM = `VTM Name`, Cancer_Alliance) |>
+  summarise(ddd = sum(Value), .groups = "drop") -> cdk46AllianceData
 
-head(cdk46ICBData)
-```
+head(cdk46AllianceData)
 
-## Prepare combined data with all three drugs
-
-```{r}
-# Extract each drug separately
-ribo <- cdk46ICBData |>
-  ungroup() |>
+# Prepare combined data with all three drugs
+ribo <- cdk46AllianceData |>
   filter(VTM == "Ribociclib") |>
-  select(-VTM) |> 
+  select(-VTM) |>
   rename(Ribociclib = ddd)
 
-palbo <- cdk46ICBData |>
-  ungroup() |>
+palbo <- cdk46AllianceData |>
   filter(VTM == "Palbociclib") |>
-  select(-VTM) |> 
+  select(-VTM) |>
   rename(Palbociclib = ddd)
 
-abema <- cdk46ICBData |>
-  ungroup() |>
+abema <- cdk46AllianceData |>
   filter(VTM == "Abemaciclib") |>
-  select(-VTM) |> 
+  select(-VTM) |>
   rename(Abemaciclib = ddd)
 
 # Combine all three drugs
 combinedData <- ribo |>
-  left_join(palbo) |>
-  left_join(abema)
+  full_join(palbo, by = c("year_month", "Cancer_Alliance")) |>
+  full_join(abema, by = c("year_month", "Cancer_Alliance"))
 
 # Replace NA with 0 for all drugs (may not be available in all periods)
 combinedData <- combinedData |>
@@ -68,30 +50,13 @@ combinedData <- combinedData |>
     Palbociclib = replace_na(Palbociclib, 0),
     Abemaciclib = replace_na(Abemaciclib, 0)
   )
-```
 
-## Add Cancer Alliance information
-
-```{r}
-alliances <- read_csv(here::here("data/CancerAlliances.csv")) |>
-  mutate(ICB_upper = toupper(paste("NHS", ICS))) 
-
-combinedData <- combinedData |>
-  rename(ICB = ICB_name) |>
-  mutate(ICB_upper = toupper(ICB)) |>
-  left_join(alliances, by = "ICB_upper") |>
-  select(-ICB_upper)
-```
-
-## Calculate percentages for each drug relative to total usage
-
-```{r}
 # Filter to 2020 and 2024 data and aggregate by Cancer Alliance
 allianceData <- combinedData |>
   filter(year_month >= as.Date("2020-01-01") & year_month <= as.Date("2024-12-31")) |>
   filter(year_month >= as.Date("2024-01-01") | year_month <= as.Date("2020-12-31")) |>
   mutate(year = year(year_month)) |>
-  select(-year_month, -ICB, -Region, -ICS) |>
+  select(-year_month) |>
   group_by(year, Cancer_Alliance) |>
   summarise(across(c(Ribociclib, Palbociclib, Abemaciclib), sum), .groups = "drop")
 
@@ -147,84 +112,114 @@ abemaciclib_pct <- allianceData |>
 allPercentages <- ribociclib_pct |>
   left_join(palbociclib_pct, by = "Cancer_Alliance") |>
   left_join(abemaciclib_pct, by = "Cancer_Alliance")
-```
 
-## Load shapefile and join data
-
-```{r}
+# Load shapefile and mapping for name corrections
 shp <- read_sf(here::here("data/map/Cancer_Alliances_July_2023_Boundaries/CAL_JUL_2023_EN_BFE.shp"))
+shapefile_mapping <- read_csv(here::here("data/shapefile_cancer_alliance_mapping.csv"))
 
+# Map shapefile CAL23NM to trust_information names (for corrections and East of England merge)
+shp <- shp |>
+  left_join(shapefile_mapping, by = c("CAL23NM" = "shapefile_CAL23NM")) |>
+  mutate(merged_name = coalesce(trust_information_name, CAL23NM))
+
+# Combine East of England polygons (merged in trust-information but not yet in shapefile)
+shp <- shp |>
+  group_by(merged_name) |>
+  summarise(.groups = "drop")
+
+# Prepare map data: Cancer Alliance base name (strip " Cancer Alliance")
+# Matches shapefile CAL23NM for most; mapping file handles exceptions
 mapData <- allPercentages |>
-  mutate(CAL23NM = str_remove(Cancer_Alliance, " Cancer Alliance")) |>
-  mutate(CAL23NM = str_replace(CAL23NM, "Humber, Coast and Vale", "Humber and North Yorkshire")) |>
-  mutate(CAL23NM = str_replace(CAL23NM, "RM Partners", "West London")) |>
+  mutate(merged_name = str_remove(Cancer_Alliance, " Cancer Alliance")) |>
   select(-Cancer_Alliance)
 
 shp_with_data <- shp |>
-  left_join(mapData, by = c("CAL23NM" = "CAL23NM"))
-```
+  left_join(mapData, by = c("merged_name" = "merged_name"))
 
-## Create map plotting function
-
-```{r}
-
-create_percentage_figure <- function(data, col_2024, pct_label) {
+# Create map plotting function
+create_percentage_figure <- function(data, col_2024, pct_label, show_legend = TRUE) {
 
   pct_scale <- scale_fill_viridis_c(limits = c(0, 100),
                                     name = pct_label,
                                     option = "plasma",
                                     direction = -1)  # Reverse so higher values are darker
 
-  # Percentage map with legend
+  # Percentage map with optional legend
   pctMap <- ggplot(data) +
     geom_sf(aes(fill = .data[[col_2024]]), color = "black") +
     pct_scale +
     guides(fill = guide_colourbar(title.position = "top", title.hjust = 0.5)) +
-    theme_void()
+    theme_void() +
+    if (!show_legend) theme(legend.position = "none")
 
   return(pctMap)
 }
-```
 
-## Figure 1: Ribociclib % of total CDK4/6 inhibitors (2024)
-
-```{r fig.width=6, fig.height=6}
+# Create individual maps without legends
 ribociclib_plot <- create_percentage_figure(
   shp_with_data,
   "ribociclib_2024",
-  "% Ribociclib\n(of total CDK4/6 inhibitors)"
-)
+  "% Ribociclib\n(of total CDK4/6 inhibitors)",
+  show_legend = FALSE
+) +
+  labs(title = "Ribociclib")
 
-ribociclib_plot
-```
-
-## Figure 2: Palbociclib % of total CDK4/6 inhibitors (2024)
-
-```{r fig.width=6, fig.height=6}
 palbociclib_plot <- create_percentage_figure(
   shp_with_data,
   "palbociclib_2024",
-  "% Palbociclib\n(of total CDK4/6 inhibitors)"
-)
+  "% Palbociclib\n(of total CDK4/6 inhibitors)",
+  show_legend = FALSE
+) +
+  labs(title = "Palbociclib")
 
-palbociclib_plot
-```
-
-## Figure 3: Abemaciclib % of total CDK4/6 inhibitors (2024)
-
-```{r fig.width=6, fig.height=6}
 abemaciclib_plot <- create_percentage_figure(
   shp_with_data,
   "abemaciclib_2024",
-  "% Abemaciclib\n(of total CDK4/6 inhibitors)"
+  "% Abemaciclib\n(of total CDK4/6 inhibitors)",
+  show_legend = FALSE
+) +
+  labs(title = "Abemaciclib")
+
+# Create a custom legend plot with a tall color bar
+legend_plot <- ggplot(shp_with_data) +
+  geom_sf(aes(fill = ribociclib_2024), color = "black") +
+  scale_fill_viridis_c(limits = c(0, 100),
+                       name = "% of total CDK4/6 inhibitors",
+                       option = "plasma",
+                       direction = -1) +
+  guides(fill = guide_colourbar(title.position = "top", 
+                                title.hjust = 0.5,
+                                barheight = grid::unit(4, "inches"),
+                                barwidth = grid::unit(0.4, "inches"))) +
+  theme_void() +
+  theme(legend.position = "right")
+
+shared_legend <- cowplot::get_legend(legend_plot)
+
+# Combine the three maps side by side
+combined_plot <- cowplot::plot_grid(
+  ribociclib_plot,
+  palbociclib_plot,
+  abemaciclib_plot,
+  nrow = 1,
+  align = "h",
+  axis = "tb"
 )
 
-abemaciclib_plot
-```
+# Add the shared legend to the right of the maps
+final_plot <- cowplot::plot_grid(
+  combined_plot,
+  shared_legend,
+  nrow = 1,
+  rel_widths = c(1, 0.15),
+  align = "v",
+  axis = "l"
+)
 
-## Summary tables
 
-```{r}
+final_plot
+
+# Summary tables
 # Ribociclib percentage of total CDK4/6 inhibitors
 ribociclib_pct |>
   gt() |>
@@ -234,9 +229,7 @@ ribociclib_pct |>
     ribociclib_2024 = "2024 (%)"
   ) |>
   tab_header(title = "Ribociclib % (of total CDK4/6 inhibitors)")
-```
 
-```{r}
 # Palbociclib percentage of total CDK4/6 inhibitors
 palbociclib_pct |>
   gt() |>
@@ -246,9 +239,7 @@ palbociclib_pct |>
     palbociclib_2024 = "2024 (%)"
   ) |>
   tab_header(title = "Palbociclib % (of total CDK4/6 inhibitors)")
-```
 
-```{r}
 # Abemaciclib percentage of total CDK4/6 inhibitors
 abemaciclib_pct |>
   gt() |>
@@ -258,29 +249,9 @@ abemaciclib_pct |>
     abemaciclib_2024 = "2024 (%)"
   ) |>
   tab_header(title = "Abemaciclib % (of total CDK4/6 inhibitors)")
-```
 
-## Export plots for Journal
+ggsave(here::here("outputs/CDK46_Percentage_Maps_Combined.svg"), final_plot, width = 20, height = 6)
+ggsave(here::here("outputs/CDK46_Percentage_Maps_Combined.png"), final_plot, dpi = 350, width = 20, height = 6)
 
-```{r}
-# Figure 1: Ribociclib percentage of total CDK4/6 inhibitors
-ggsave(here::here("r/outputs/Ribociclib_Percentage_Map.svg"), ribociclib_plot, width = 6, height = 6)
-ggsave(here::here("r/outputs/Ribociclib_Percentage_Map.png"), ribociclib_plot, dpi = 350, width = 6, height = 6)
-
-# Figure 2: Palbociclib percentage of total CDK4/6 inhibitors
-ggsave(here::here("r/outputs/Palbociclib_Percentage_Map.svg"), palbociclib_plot, width = 6, height = 6)
-ggsave(here::here("r/outputs/Palbociclib_Percentage_Map.png"), palbociclib_plot, dpi = 350, width = 6, height = 6)
-
-# Figure 3: Abemaciclib percentage of total CDK4/6 inhibitors
-ggsave(here::here("r/outputs/Abemaciclib_Percentage_Map.svg"), abemaciclib_plot, width = 6, height = 6)
-ggsave(here::here("r/outputs/Abemaciclib_Percentage_Map.png"), abemaciclib_plot, dpi = 350, width = 6, height = 6)
-
-
-saveRDS(ribociclib_pct, here::here("r/r-notebook/ribociclib_percentage_table.RDS"))
-saveRDS(palbociclib_pct, here::here("r/r-notebook/palbociclib_percentage_table.RDS"))
-saveRDS(abemaciclib_pct, here::here("r/r-notebook/abemaciclib_percentage_table.RDS"))
-
-write_csv(ribociclib_pct, here::here("r/outputs/Ribociclib_Percentage_table.csv"))
-write_csv(palbociclib_pct, here::here("r/outputs/Palbociclib_Percentage_table.csv"))
-write_csv(abemaciclib_pct, here::here("r/outputs/Abemaciclib_Percentage_table.csv"))
-```
+# Save combined percentage table to a single CSV
+write_csv(allPercentages, here::here("outputs/CDK46_Percentage_table.csv"))
