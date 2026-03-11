@@ -1,27 +1,37 @@
 import pandas as pd
 from pathlib import Path
-from typing import List
 
 DATA_DIR = Path("data")
 
 raw_data_path = DATA_DIR / "oph_data_11_25.csv"
-eric_data_path = DATA_DIR / "eric_trust_categories.csv"
+trust_information_path = DATA_DIR / "trust-information.csv"
 
-def process_eric_data(eric_data_path: Path) -> pd.DataFrame:
+RESTRICTED_TRUST_TYPES = [
+    "Mental Health And Learning Disability",
+    "Community",
+]
+
+def load_ods_ca_mapping(trust_information_path: Path) -> pd.DataFrame:
     """
-    Process the ERIC data
+    Load the ODS to Cancer Alliance mapping from trust-information,
+    keeping only trusts with a cancer alliance assignment.
     """
+    trust_info = pd.read_csv(trust_information_path)
+    mapping = trust_info[
+        trust_info["Cancer Alliance"].notna()
+        & (trust_info["Cancer Alliance"] != "")
+    ].copy()
 
-    restricted_categories = [
-        "Mental Health And Learning Disability",
-        "Community",
-    ]
+    mapping["cancer_alliance_name"] = mapping["Cancer Alliance"]
 
-    eric_data = pd.read_csv(eric_data_path)
-    eric_data_restricted = eric_data[~eric_data["trust_type"].isin(restricted_categories)]
-    return eric_data_restricted["trust_code"].unique()
+    return mapping[["ODS code", "cancer_alliance_name"]].rename(
+        columns={"ODS code": "ods_code"}
+    )
 
-def filter_data_by_date(data: pd.DataFrame, start_date: str, end_date: str) -> pd.DataFrame:
+
+def filter_data_by_date(
+    data: pd.DataFrame, start_date: str, end_date: str
+) -> pd.DataFrame:
     """
     Filter the data by date (inclusive)
 
@@ -36,69 +46,79 @@ def filter_data_by_date(data: pd.DataFrame, start_date: str, end_date: str) -> p
     return data[(data["Date"] >= start_date) & (data["Date"] <= end_date)]
 
 
-def restrict_by_organisation(data: pd.DataFrame, organisations: List[str]) -> pd.DataFrame:
-    """
-    Restrict the data by organisation
-
-    Args:
-        data: The data to restrict
-        organisations: List of trusts to restrict the data to
-
-    Returns:
-        The restricted data
-    """
-
-    return data[data["Trust Code"].isin(organisations)]
+def get_restricted_trust_codes(trust_information_path: Path) -> set:
+    """Return trust codes for mental health and community trusts."""
+    trust_info = pd.read_csv(trust_information_path)
+    return set(
+        trust_info[trust_info["Trust type"].isin(RESTRICTED_TRUST_TYPES)][
+            "ODS code"
+        ].unique()
+    )
 
 
-def load_and_process_data(raw_data_path: Path, eric_data_path: Path) -> pd.DataFrame:
+def load_and_process_data(
+    raw_data_path: Path, trust_information_path: Path
+) -> pd.DataFrame:
     data = pd.read_csv(raw_data_path)
-    trust_codes = process_eric_data(eric_data_path)
-    data_filtered_by_date = filter_data_by_date(data, "2019-01-01", "2024-12-01")
-    data_restricted_by_organisation = restrict_by_organisation(data_filtered_by_date, trust_codes)
-    return data_restricted_by_organisation
+    ods_ca = load_ods_ca_mapping(trust_information_path)
+
+    data = data.merge(ods_ca, left_on="Trust Code", right_on="ods_code", how="inner")
+    data = data.drop(columns=["ods_code"])
+    data = data.rename(columns={"cancer_alliance_name": "Cancer_Alliance"})
+
+    restricted = get_restricted_trust_codes(trust_information_path)
+    data = data[~data["Trust Code"].isin(restricted)]
+
+    data = filter_data_by_date(data, "2019-01-01", "2024-12-01")
+    return data
+
 
 if __name__ == "__main__":
     raw_data = pd.read_csv(raw_data_path)
-    eric_data = pd.read_csv(eric_data_path)
-    
-    original_trust_codes = set(raw_data["Trust Code"].unique())
-    eric_trust_codes = set(eric_data["trust_code"].unique())
-    restricted_trust_codes = set(eric_data[eric_data["trust_type"].isin([
-        "Mental Health And Learning Disability",
-        "Community",
-    ])]["trust_code"].unique())
-    
-    trusts_not_in_eric = original_trust_codes - eric_trust_codes
-    
-    restricted_in_original = original_trust_codes & restricted_trust_codes
+    ods_ca = load_ods_ca_mapping(trust_information_path)
+    restricted = get_restricted_trust_codes(trust_information_path)
 
-    trust_counts = pd.DataFrame({
-        "Metric": [
-            "Trusts in original data",
-            "Trusts in original data not in ERIC",
-            "Trusts in original data that are restricted"
-        ],
-        "Count": [
-            len(original_trust_codes),
-            len(trusts_not_in_eric),
-            len(restricted_in_original)
-        ]
-    })
+    original_trust_codes = set(raw_data["Trust Code"].unique())
+    mapped_trust_codes = set(ods_ca["ods_code"].unique())
+    unmapped_trusts = original_trust_codes - mapped_trust_codes
+    mapped_and_restricted = (original_trust_codes & mapped_trust_codes) & restricted
+
+    trust_counts = pd.DataFrame(
+        {
+            "Metric": [
+                "Trusts in original data",
+                "Trusts mapped to a Cancer Alliance",
+                "Trusts in original data not mapped",
+                "Trusts mapped but excluded (MH/Community)",
+            ],
+            "Count": [
+                len(original_trust_codes),
+                len(original_trust_codes & mapped_trust_codes),
+                len(unmapped_trusts),
+                len(mapped_and_restricted),
+            ],
+        }
+    )
     trust_counts.to_csv(DATA_DIR / "trust_counts.csv", index=False)
 
-    restricted_data = raw_data[raw_data["Trust Code"].isin(restricted_in_original)]
+    excluded_data = raw_data[
+        raw_data["Trust Code"].isin(unmapped_trusts | mapped_and_restricted)
+    ]
     all_vtms = raw_data["VTM Name"].unique()
-    restricted_summary = restricted_data.pivot_table(
-        index=["Trust Code", "Trust Name"],
-        columns="VTM Name",
-        values="Value",
-        aggfunc="sum",
-        fill_value=0
-    ).reindex(columns=all_vtms, fill_value=0).reset_index()
-    restricted_summary.to_csv(DATA_DIR / "restricted_trusts_ddd.csv", index=False)
-    
-    trust_codes = process_eric_data(eric_data_path)
-    data_filtered_by_date = filter_data_by_date(raw_data, "2019-01-01", "2024-12-01")
-    data_restricted_by_organisation = restrict_by_organisation(data_filtered_by_date, trust_codes)
-    data_restricted_by_organisation.to_csv(DATA_DIR / "oph_data_11_25_processed.csv", index=False)
+    excluded_summary = (
+        excluded_data.pivot_table(
+            index=["Trust Code", "Trust Name"],
+            columns="VTM Name",
+            values="Value",
+            aggfunc="sum",
+            fill_value=0,
+        )
+        .reindex(columns=all_vtms, fill_value=0)
+        .reset_index()
+    )
+    excluded_summary.to_csv(DATA_DIR / "excluded_trusts_ddd.csv", index=False)
+
+    processed = load_and_process_data(
+        raw_data_path, trust_information_path
+    )
+    processed.to_csv(DATA_DIR / "oph_data_11_25_processed.csv", index=False)
