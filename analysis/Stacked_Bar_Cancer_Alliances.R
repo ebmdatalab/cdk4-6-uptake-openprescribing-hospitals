@@ -6,25 +6,25 @@ library(patchwork)
 cdk46Data <- readr::read_csv(here("data/oph_data_11_25_processed.csv")) |>
   mutate(Date = as.Date(Date))
 
-# Aggregate the data to VTM & month for ICBs
-cdk46ICBData <- cdk46Data |>
-  group_by(year_month = Date, VTM = `VTM Name`, ICB_name = ICB) |>
+# Aggregate the data to VTM & month by Cancer Alliance
+cdk46AllianceData <- cdk46Data |>
+  group_by(year_month = Date, VTM = `VTM Name`, Cancer_Alliance) |>
   summarise(ddd = sum(Value), .groups = "drop")
 
 # Extract each drug separately
-ribo <- cdk46ICBData |>
+ribo <- cdk46AllianceData |>
   ungroup() |>
   filter(VTM == "Ribociclib") |>
   select(-VTM) |>
   rename(Ribociclib = ddd)
 
-palbo <- cdk46ICBData |>
+palbo <- cdk46AllianceData |>
   ungroup() |>
   filter(VTM == "Palbociclib") |>
   select(-VTM) |>
   rename(Palbociclib = ddd)
 
-abema <- cdk46ICBData |>
+abema <- cdk46AllianceData |>
   ungroup() |>
   filter(VTM == "Abemaciclib") |>
   select(-VTM) |>
@@ -42,16 +42,6 @@ combinedData <- combinedData |>
     Abemaciclib = replace_na(Abemaciclib, 0)
   )
 
-# Add Cancer Alliance information
-alliances <- read_csv(here("data/CancerAlliances.csv")) |>
-  mutate(ICB_upper = toupper(paste("NHS", ICS)))
-
-combinedData <- combinedData |>
-  rename(ICB = ICB_name) |>
-  mutate(ICB_upper = toupper(ICB)) |>
-  left_join(alliances, by = "ICB_upper") |>
-  select(-ICB_upper)
-
 # Filter to 2021 and 2024 data and aggregate by Cancer Alliance (Jan-Dec inclusive for each year)
 allianceData <- combinedData |>
   filter(
@@ -59,7 +49,7 @@ allianceData <- combinedData |>
     (year_month >= as.Date("2024-01-01") & year_month <= as.Date("2024-12-31"))
   ) |>
   mutate(year = year(year_month)) |>
-  select(-year_month, -ICB, -Region, -ICS) |>
+  select(-year_month) |>
   group_by(year, Cancer_Alliance) |>
   summarise(across(c(Ribociclib, Palbociclib, Abemaciclib), sum), .groups = "drop")
 
