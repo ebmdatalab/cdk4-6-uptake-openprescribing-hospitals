@@ -371,7 +371,33 @@ def create_combined_plot(data_path: Path, output_dir: Path, key_dates_path: Path
     output_dir.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_dir / "QuantilePlots_combined.svg", format='svg', dpi=300, bbox_inches='tight')
     fig.savefig(output_dir / "QuantilePlots_combined.png", format='png', dpi=350, bbox_inches='tight')
-    
+
+    # Export quantile data table (median and percentile boundaries)
+    quantile_tables = []
+    for drug_name, quantiles in [
+        ("Palbociclib", palbo_quantiles),
+        ("Abemaciclib", abema_quantiles),
+        ("Ribociclib", ribo_quantiles),
+    ]:
+        tbl = quantiles.copy()
+        tbl["Drug"] = drug_name
+        quantile_tables.append(tbl)
+    quantile_table = pd.concat(quantile_tables, ignore_index=True)
+    quantile_table = quantile_table[
+        ["Drug", "year_month", "pct_05", "pct_10", "pct_25", "median", "pct_75", "pct_90", "pct_95"]
+    ].rename(columns={
+        "year_month": "Month",
+        "pct_05": "5th percentile",
+        "pct_10": "10th percentile",
+        "pct_25": "25th percentile",
+        "median": "Median",
+        "pct_75": "75th percentile",
+        "pct_90": "90th percentile",
+        "pct_95": "95th percentile",
+    })
+    quantile_table["Month"] = quantile_table["Month"].dt.strftime("%Y-%m")
+    quantile_table.to_csv(output_dir / "QuantilePlots_data.csv", index=False)
+
     print(f"Plots saved to {output_dir}")
     plt.close()
 
