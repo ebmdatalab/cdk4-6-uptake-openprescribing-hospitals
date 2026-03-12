@@ -55,7 +55,7 @@ coreTable |>
 ft <- coreTable |>
   flextable() |>
   bold(i = c(1, 5, 12)) |>
-  colformat_double(digits = 0) |>
+  colformat_double(digits = 0, big.mark = ",") |>
   flextable::footnote(
     i = c(1, 5, 12, 1, 5, 12, 1, 5, 12), j = c(4, 4, 4, 5, 5, 5, 6, 6, 6),
     value = as_paragraph(c("Defined daily doses")),
@@ -75,4 +75,6 @@ ft <- coreTable |>
 
 print(ft)
 
-write_csv(coreTable, here::here("r/outputs/Table1.csv"))
+coreTable |>
+  mutate(across(c(`2019`, `Last year`, Total), \(x) if_else(is.na(x), "", format(round(x), big.mark = ",", trim = TRUE)))) |>
+  write_csv(here::here("outputs/Table1.csv"))
