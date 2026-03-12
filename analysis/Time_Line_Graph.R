@@ -5,6 +5,7 @@ require(readr)
 require(here)
 require(scales)
 require(stringr)
+require(ggtext)
 
 # Define BMJ colour scheme
 BMJ_colours <- c("Palbociclib"="#2a6ebb", 
@@ -38,7 +39,7 @@ cdk46MonthlyData <- cdk46MonthlyData |>
 # Load key dates for timeline markers
 KeyDates <- readr::read_csv(here::here("data/KeyDates.csv")) |>
   mutate(date = as.Date(date, format = "%d/%m/%Y")) |>
-  filter(include_on_fig2 == T)
+  mutate(display_label = stringr::str_remove_all(coalesce(event_label, event), "HR [0-9.]+ \\([0-9.-]+\\)<br/>"))
 
 # Create the base plot
 cdk46Plot <- cdk46MonthlyData |>
@@ -99,21 +100,24 @@ cdk46Plot <- cdk46Plot +
   geom_segment(data=filter(KeyDates, text_pos == "above"), 
                aes(x=as.Date(date)-30, xend=as.Date(date)+30, y = marker, yend= marker,
                    colour=paste0(VTM,"_line")), lwd=0.8, lty=5, show.legend = FALSE)  +
-  # plot all the left text
-  geom_text(data=filter(KeyDates, text_pos == "left"), 
+  # plot all the left text (use event_label like EventTimeLineSplit)
+  geom_richtext(data=filter(KeyDates, text_pos == "left"), 
                aes(x=as.Date(date) - 65, y = marker, colour=VTM, 
-                   label = stringr::str_wrap(event, 14)), 
-            size = 3.5, hjust = 1, show.legend = FALSE) +
+                   label = display_label), 
+            size = 3.5, hjust = 1, show.legend = FALSE,
+            fill = NA, label.color = NA, label.padding = grid::unit(rep(0, 4), "pt")) +
   # plot all the right text
-  geom_text(data=filter(KeyDates, text_pos == "right"), 
+  geom_richtext(data=filter(KeyDates, text_pos == "right"), 
                aes(x=as.Date(date) + 65, y = marker, colour=VTM, 
-                   label = stringr::str_wrap(event, 14)), 
-            size = 3.5, hjust = 0, show.legend = FALSE) +
+                   label = display_label), 
+            size = 3.5, hjust = 0, show.legend = FALSE,
+            fill = NA, label.color = NA, label.padding = grid::unit(rep(0, 4), "pt")) +
   # plot all the above text
-  geom_text(data=filter(KeyDates, text_pos == "above"), 
+  geom_richtext(data=filter(KeyDates, text_pos == "above"), 
                aes(x=as.Date(date), y = marker+5000, colour=VTM, 
-                   label = stringr::str_wrap(event, 14)), 
-            size = 3.5, hjust = 0.5, vjust = 0, show.legend = FALSE) +
+                   label = display_label), 
+            size = 3.5, hjust = 0.5, vjust = 0, show.legend = FALSE,
+            fill = NA, label.color = NA, label.padding = grid::unit(rep(0, 4), "pt")) +
   # Redraw the lines so they are on top 
   geom_line(lwd=1.1)
 

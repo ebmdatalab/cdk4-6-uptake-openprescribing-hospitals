@@ -65,7 +65,9 @@
 <text x='496.89' y='10.43' style='font-size: 9.96px; font-family: "Arial";' textLength='14.38px' lengthAdjust='spacingAndGlyphs'>OS</text>
 <text x='514.03' y='10.43' style='font-size: 9.96px; font-family: "Arial";' textLength='19.36px' lengthAdjust='spacingAndGlyphs'>data</text>
 <text x='493.84' y='22.34' style='font-size: 9.96px; font-family: "Arial";' textLength='42.61px' lengthAdjust='spacingAndGlyphs'>published</text>
-<text x='507.12' y='34.24' style='font-size: 9.96px; font-style: italic; font-family: "Arial";' textLength='16.05px' lengthAdjust='spacingAndGlyphs'>n.s.</text>
+<text x='471.18' y='34.24' style='font-size: 9.96px; font-family: "Arial";' textLength='14.38px' lengthAdjust='spacingAndGlyphs'>HR</text>
+<text x='488.32' y='34.24' style='font-size: 9.96px; font-family: "Arial";' textLength='19.36px' lengthAdjust='spacingAndGlyphs'>0.76</text>
+<text x='510.45' y='34.24' style='font-size: 9.96px; font-family: "Arial";' textLength='48.66px' lengthAdjust='spacingAndGlyphs'>(0.56-1.03)</text>
 <text x='496.06' y='46.15' style='font-size: 9.96px; font-family: "Arial";' textLength='16.59px' lengthAdjust='spacingAndGlyphs'>(1st</text>
 <text x='515.41' y='46.15' style='font-size: 9.96px; font-family: "Arial";' textLength='18.81px' lengthAdjust='spacingAndGlyphs'>line)</text>
 <text x='210.45' y='22.34' style='font-size: 9.96px; font-family: "Arial";' textLength='23.78px' lengthAdjust='spacingAndGlyphs'>NICE</text>
@@ -130,7 +132,9 @@
 <text x='391.02' y='156.26' style='font-size: 9.96px; font-family: "Arial";' textLength='14.38px' lengthAdjust='spacingAndGlyphs'>OS</text>
 <text x='408.16' y='156.26' style='font-size: 9.96px; font-family: "Arial";' textLength='19.36px' lengthAdjust='spacingAndGlyphs'>data</text>
 <text x='387.97' y='168.16' style='font-size: 9.96px; font-family: "Arial";' textLength='42.61px' lengthAdjust='spacingAndGlyphs'>published</text>
-<text x='401.25' y='180.07' style='font-size: 9.96px; font-style: italic; font-family: "Arial";' textLength='16.05px' lengthAdjust='spacingAndGlyphs'>n.s.</text>
+<text x='365.31' y='180.07' style='font-size: 9.96px; font-family: "Arial";' textLength='14.38px' lengthAdjust='spacingAndGlyphs'>HR</text>
+<text x='382.45' y='180.07' style='font-size: 9.96px; font-family: "Arial";' textLength='19.36px' lengthAdjust='spacingAndGlyphs'>0.96</text>
+<text x='404.58' y='180.07' style='font-size: 9.96px; font-family: "Arial";' textLength='48.66px' lengthAdjust='spacingAndGlyphs'>(0.78-1.18)</text>
 <text x='390.19' y='191.98' style='font-size: 9.96px; font-family: "Arial";' textLength='16.59px' lengthAdjust='spacingAndGlyphs'>(1st</text>
 <text x='409.55' y='191.98' style='font-size: 9.96px; font-family: "Arial";' textLength='18.81px' lengthAdjust='spacingAndGlyphs'>line)</text>
 <text x='81.67' y='168.16' style='font-size: 9.96px; font-family: "Arial";' textLength='19.36px' lengthAdjust='spacingAndGlyphs'>PFS</text>
@@ -184,8 +188,9 @@
 <text x='377.26' y='302.09' style='font-size: 9.96px; font-family: "Arial";' textLength='14.38px' lengthAdjust='spacingAndGlyphs'>OS</text>
 <text x='394.40' y='302.09' style='font-size: 9.96px; font-family: "Arial";' textLength='19.36px' lengthAdjust='spacingAndGlyphs'>data</text>
 <text x='374.21' y='313.99' style='font-size: 9.96px; font-family: "Arial";' textLength='42.61px' lengthAdjust='spacingAndGlyphs'>published</text>
-<text x='377.39' y='325.90' style='font-size: 9.96px; font-style: italic; font-family: "Arial";' textLength='5.53px' lengthAdjust='spacingAndGlyphs'>p</text>
-<text x='382.93' y='325.90' style='font-size: 9.96px; font-family: "Arial";' textLength='30.70px' lengthAdjust='spacingAndGlyphs'>=0.008</text>
+<text x='351.55' y='325.90' style='font-size: 9.96px; font-family: "Arial";' textLength='14.38px' lengthAdjust='spacingAndGlyphs'>HR</text>
+<text x='368.69' y='325.90' style='font-size: 9.96px; font-family: "Arial";' textLength='19.36px' lengthAdjust='spacingAndGlyphs'>0.76</text>
+<text x='390.82' y='325.90' style='font-size: 9.96px; font-family: "Arial";' textLength='48.66px' lengthAdjust='spacingAndGlyphs'>(0.63-0.93)</text>
 <text x='376.43' y='337.80' style='font-size: 9.96px; font-family: "Arial";' textLength='16.59px' lengthAdjust='spacingAndGlyphs'>(1st</text>
 <text x='395.78' y='337.80' style='font-size: 9.96px; font-family: "Arial";' textLength='18.81px' lengthAdjust='spacingAndGlyphs'>line)</text>
 <text x='79.55' y='313.99' style='font-size: 9.96px; font-family: "Arial";' textLength='19.36px' lengthAdjust='spacingAndGlyphs'>PFS</text>
