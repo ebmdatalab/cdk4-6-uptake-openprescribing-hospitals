@@ -14,7 +14,7 @@ keyDates <- read_csv(here::here("data/KeyDates.csv"))
 # Build a framework
 axisData <- expand_grid(
   year = 2016:2024,
-  VTM = c("Abemaciclib","Palbociclib", "Ribociclib")
+  VTM = factor(c("Palbociclib", "Abemaciclib", "Ribociclib"), levels = c("Palbociclib", "Abemaciclib", "Ribociclib"))
 ) |>
   mutate(x1 = as.Date(paste0(year,"-01-01"))) |>
   mutate(x2 = x1+365) |>
@@ -22,6 +22,7 @@ axisData <- expand_grid(
                    
 keyDates |>
   mutate(date = as.Date(date, format="%d/%m/%Y")) |>
+  mutate(VTM = factor(VTM, levels = c("Palbociclib", "Abemaciclib", "Ribociclib"))) |>
   select(VTM, event_date = date, event_label, event_level, event_align) |>
 ggplot() +
   theme_void() +
@@ -29,7 +30,7 @@ ggplot() +
   xlim(as.Date("2016-01-01"), as.Date("2025-01-01")) +
 #  geom_point(aes(x=x, y=y)) +
   facet_wrap2(~VTM, ncol=1, strip.position="left", strip=strip_themed(
-    background_y = elem_list_rect(fill=sort(BMJ_colours_odd_even[1:3], decreasing=T)))) +
+    background_y = elem_list_rect(fill=BMJ_colours_odd_even[c("Palbociclib", "Abemaciclib", "Ribociclib")]))) +
   geom_rect(data=axisData,
             inherit.aes = F,
             aes(xmin=x1, xmax=x2, ymin=-0.5, ymax = 0.5, fill=VTM_fill))+

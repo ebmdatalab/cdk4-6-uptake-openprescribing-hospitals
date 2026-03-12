@@ -34,11 +34,13 @@ cdk46MonthlyTotals <- cdk46MonthlyData |>
 
 cdk46MonthlyData <- cdk46MonthlyData |>
   rows_append(cdk46MonthlyTotals) |>
-  arrange(year_month)
+  arrange(year_month) |>
+  mutate(VTM = factor(VTM, levels = c("Palbociclib", "Abemaciclib", "Ribociclib", "Total")))
 
 # Load key dates for timeline markers
 KeyDates <- readr::read_csv(here::here("data/KeyDates.csv")) |>
   mutate(date = as.Date(date, format = "%d/%m/%Y")) |>
+  mutate(VTM = factor(VTM, levels = c("Palbociclib", "Abemaciclib", "Ribociclib"))) |>
   mutate(display_label = stringr::str_remove_all(coalesce(event_label, event), "HR [0-9.]+ \\([0-9.-]+\\)<br/>"))
 
 # Create the base plot
