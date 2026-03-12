@@ -101,7 +101,8 @@ plotData2021 <- allianceData |>
 # Create stacked bar chart
 bar_chart_theme <- list(
   scale_fill_manual(
-    values = c("Palbociclib" = "#2a6ebb", "Ribociclib" = "#00b2a9", "Abemaciclib" = "#c50084"),
+    values = c("Palbociclib" = "#2a6ebb", "Abemaciclib" = "#c50084", "Ribociclib" = "#00b2a9"),
+    breaks = c("Palbociclib", "Abemaciclib", "Ribociclib"),
     name = "Drug"
   ),
   labs(x = NULL, y = "% of total CDK4/6 inhibitor issuing"),
@@ -117,7 +118,8 @@ bar_chart_theme <- list(
     legend.box.spacing = unit(-20, "pt"),
     legend.margin = margin(0, 0, 0, 0),
     legend.title = element_blank(),
-    legend.text = element_text(size = 10)
+    legend.text = element_text(size = 16),
+    legend.key.size = unit(1, "cm")
   ),
   scale_y_continuous(expand = expansion(mult = c(0, 0.05)))
 )

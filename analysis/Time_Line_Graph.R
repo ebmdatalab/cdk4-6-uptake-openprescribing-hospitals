@@ -5,6 +5,7 @@ require(readr)
 require(here)
 require(scales)
 require(stringr)
+require(ggtext)
 
 # Define BMJ colour scheme
 BMJ_colours <- c("Palbociclib"="#2a6ebb", 
@@ -33,12 +34,14 @@ cdk46MonthlyTotals <- cdk46MonthlyData |>
 
 cdk46MonthlyData <- cdk46MonthlyData |>
   rows_append(cdk46MonthlyTotals) |>
-  arrange(year_month)
+  arrange(year_month) |>
+  mutate(VTM = factor(VTM, levels = c("Palbociclib", "Abemaciclib", "Ribociclib", "Total")))
 
 # Load key dates for timeline markers
 KeyDates <- readr::read_csv(here::here("data/KeyDates.csv")) |>
   mutate(date = as.Date(date, format = "%d/%m/%Y")) |>
-  filter(include_on_fig2 == T)
+  mutate(VTM = factor(VTM, levels = c("Palbociclib", "Abemaciclib", "Ribociclib"))) |>
+  mutate(display_label = stringr::str_remove_all(coalesce(event_label, event), "HR [0-9.]+ \\([0-9.-]+\\)<br/>"))
 
 # Create the base plot
 cdk46Plot <- cdk46MonthlyData |>
@@ -51,10 +54,11 @@ cdk46Plot <- cdk46MonthlyData |>
   theme_classic() +
   scale_color_manual(values = BMJ_colours, 
                      breaks = c("Palbociclib", "Abemaciclib", "Ribociclib", "Total")) +
-  # Force x axis to show wider timeline, and better break points
+  # Force x axis to show wider timeline, and better break points (match quantile_plots.py)
   scale_x_date("Month",
                      limits = c(as.Date("2019-01-01"), as.Date("2025-01-01")), 
                      date_breaks = "1 year",
+                     date_minor_breaks = "1 month",
                      date_labels = "%Y",
                expand = expansion(mult = c(0, 0.02))
                ) +
@@ -71,10 +75,14 @@ cdk46Plot <- cdk46MonthlyData |>
   theme(legend.position = "bottom", 
         legend.title = element_blank(),
         legend.text = element_text(size = 12),
-        panel.grid.minor = element_blank(),
-        panel.grid.major.x = element_blank(),
+        panel.grid.major = element_line(colour = scales::alpha("grey", 0.5), linewidth = 0.5),
+        panel.grid.minor.x = element_line(colour = scales::alpha("grey", 0.3), linewidth = 0.3),
+        panel.grid.minor.y = element_blank(),
         panel.border = element_blank(),
-        axis.line = element_line(linewidth = 0.5, colour = "black"))
+        axis.line = element_line(linewidth = 0.5, colour = "black"),
+        axis.ticks.length.x = unit(0.15, "cm"),
+        axis.ticks.length.y = unit(0.1, "cm"),
+        axis.text = element_text(size = 12))
 
 # Add timeline markers and labels
 cdk46Plot <- cdk46Plot +
@@ -94,21 +102,24 @@ cdk46Plot <- cdk46Plot +
   geom_segment(data=filter(KeyDates, text_pos == "above"), 
                aes(x=as.Date(date)-30, xend=as.Date(date)+30, y = marker, yend= marker,
                    colour=paste0(VTM,"_line")), lwd=0.8, lty=5, show.legend = FALSE)  +
-  # plot all the left text
-  geom_text(data=filter(KeyDates, text_pos == "left"), 
+  # plot all the left text (use event_label like EventTimeLineSplit)
+  geom_richtext(data=filter(KeyDates, text_pos == "left"), 
                aes(x=as.Date(date) - 65, y = marker, colour=VTM, 
-                   label = stringr::str_wrap(event, 14)), 
-            size = 2.7, hjust = 1, show.legend = FALSE) +
+                   label = display_label), 
+            size = 3.5, hjust = 1, show.legend = FALSE,
+            fill = NA, label.color = NA, label.padding = grid::unit(rep(0, 4), "pt")) +
   # plot all the right text
-  geom_text(data=filter(KeyDates, text_pos == "right"), 
+  geom_richtext(data=filter(KeyDates, text_pos == "right"), 
                aes(x=as.Date(date) + 65, y = marker, colour=VTM, 
-                   label = stringr::str_wrap(event, 14)), 
-            size = 2.7, hjust = 0, show.legend = FALSE) +
+                   label = display_label), 
+            size = 3.5, hjust = 0, show.legend = FALSE,
+            fill = NA, label.color = NA, label.padding = grid::unit(rep(0, 4), "pt")) +
   # plot all the above text
-  geom_text(data=filter(KeyDates, text_pos == "above"), 
+  geom_richtext(data=filter(KeyDates, text_pos == "above"), 
                aes(x=as.Date(date), y = marker+5000, colour=VTM, 
-                   label = stringr::str_wrap(event, 14)), 
-            size = 2.7, hjust = 0.5, vjust = 0, show.legend = FALSE) +
+                   label = display_label), 
+            size = 3.5, hjust = 0.5, vjust = 0, show.legend = FALSE,
+            fill = NA, label.color = NA, label.padding = grid::unit(rep(0, 4), "pt")) +
   # Redraw the lines so they are on top 
   geom_line(lwd=1.1)
 

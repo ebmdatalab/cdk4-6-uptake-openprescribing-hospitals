@@ -1,14 +1,14 @@
-VTM,marker,text_pos,event,date, type, hjust,event_date,cdf_date, include_on_fig2, event_label, event_level, event_align
-Palbociclib,300000,above,Palbociclib first line NICE,16/11/2017, NICE,1,20/12/2017,16/11/2017, F,NICE<br/>TA495<br/>(1st line),1, 0.5
-Palbociclib,300000,left,Palbociclib second line NICE,28/11/2019, NICE,0,15/01/2020,28/11/2019, T,NICE<br/>TA619<br/>(2nd line),-1, 0.5
-Palbociclib,300000,right,First line palbociclib survival data: HR 0.96 (0.78-1.18),08/06/2022, OS data,0.5,08/06/2022,NA, T,OS data<br/>published<br/>*n.s.*<br/>(1st line),1, 0.5
-Abemaciclib,225000,right,Abemaciclib OS Data (first line),08/05/2024, OS data,0.5,08/05/2024,NA, F,OS data<br/>published<br/>*n.s.*<br/>(1st line),1, 0.5
-Abemaciclib,160000,right,Abemaciclib first line NICE,19/01/2019, NICE,0.5,27/02/2019,19/01/2019, T,NICE<br/>TA563<br/>(1st line),1, 0.5
-Abemaciclib,45000,right,Abemaciclib second line NICE,02/04/2019, NICE,0.5,08/05/2019,02/04/2019, T,NICE<br/>TA725<br/>(2nd line), -1,0.5
-Abemaciclib,92000,right,Abemaciclib adjuvant NICE,17/06/2022, NICE,0,20/07/2022,17/06/2022, T,NICE<br/>TA810<br/>(Adjuvant), -1, 0.5
-Ribociclib,65000,left,Ribociclib first line NICE,16/11/2017, NICE,1,20/12/2017,16/11/2017, F,NICE<br/>TA496<br/>(1st line),1, 0.5
-Ribociclib,40000,left,Ribociclib second line NICE,26/02/2021, NICE,0.5,31/03/2021,26/02/2021, F,NICE<br/>TA687<br/>(2nd line), -1, 0.5
-Ribociclib,75000,left,First line ribociclib survival data: HR 0.76 (0.63-0.93),09/03/2022, OS data,1,09/03/2022,NA, T,OS data<br/>published<br/>*p*=0.008<br/>(1st line),1, 0.5
-Palbociclib,0, above, PALOMA-2 Trial Published, 17/11/2016, data, 0.5, 17/11/2016,  NA, F,PFS data<br/>published<br/>(1st line),1, 0.5
-Ribociclib,0, above, MONALEESA-2 Trial Published, 03/11/2016, data, 0.5, 03/11/2016, NA, F,PFS data<br/>published<br/>(1st line),1, 0.5
-Abemaciclib,0, above, MONARCH-3 Trial Published, 10/11/2017, data, 0.5, 10/11/2017, NA, F,PFS data<br/>published<br/>(1st line),1, 0.5
+VTM,marker,text_pos,event,date,event_date,event_label,event_level,event_align
+Palbociclib,300000,above,Palbociclib first line NICE,16/11/2017,20/12/2017,NICE<br/>TA495<br/>(1st line),1,0.5
+Palbociclib,300000,left,Palbociclib second line NICE,28/11/2019,15/01/2020,NICE<br/>TA619<br/>(2nd line),-1,0.5
+Palbociclib,300000,right,First line palbociclib survival data: HR 0.96 (0.78-1.18),08/06/2022,08/06/2022,OS data<br/>published<br/>HR 0.96 (0.78-1.18)<br/>(1st line),1,0.5
+Abemaciclib,225000,right,Abemaciclib OS Data (first line),08/05/2024,08/05/2024,OS data<br/>published<br/>HR 0.76 (0.56-1.03)<br/>(1st line),1,0.5
+Abemaciclib,160000,right,Abemaciclib first line NICE,19/01/2019,27/02/2019,NICE<br/>TA563<br/>(1st line),1,0.5
+Abemaciclib,45000,right,Abemaciclib second line NICE,02/04/2019,08/05/2019,NICE<br/>TA725<br/>(2nd line),-1,0.5
+Abemaciclib,92000,right,Abemaciclib adjuvant NICE,17/06/2022,20/07/2022,NICE<br/>TA810<br/>(Adjuvant),-1,0.5
+Ribociclib,65000,left,Ribociclib first line NICE,16/11/2017,20/12/2017,NICE<br/>TA496<br/>(1st line),1,0.5
+Ribociclib,40000,left,Ribociclib second line NICE,26/02/2021,31/03/2021,NICE<br/>TA687<br/>(2nd line),-1,0.5
+Ribociclib,75000,left,First line ribociclib survival data: HR 0.76 (0.63-0.93),09/03/2022,09/03/2022,OS data<br/>published<br/>HR 0.76 (0.63-0.93)<br/>(1st line),1,0.5
+Palbociclib,0,above,PALOMA-2 Trial Published,17/11/2016,17/11/2016,PFS data<br/>published<br/>(1st line),1,0.5
+Ribociclib,0,above,MONALEESA-2 Trial Published,03/11/2016,03/11/2016,PFS data<br/>published<br/>(1st line),1,0.5
+Abemaciclib,0,above,MONARCH-3 Trial Published,10/11/2017,10/11/2017,PFS data<br/>published<br/>(1st line),1,0.5
