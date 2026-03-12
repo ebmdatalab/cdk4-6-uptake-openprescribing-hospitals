@@ -1,7 +1,0 @@
-Trackdown is an R package for working with google docs
-
-This is mostly an experiment.
-
-The concept is that you can edit an Rmd file (like a notebook) in R, share it on googledrive as a google doc - and **perhaps** make and edit to non-code stuff there and still re-run the code parts.
-
-https://cran.r-project.org/web/packages/trackdown/vignettes/trackdown-workflow.html
