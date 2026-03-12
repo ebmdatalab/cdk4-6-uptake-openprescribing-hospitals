@@ -52,10 +52,34 @@ coreTable |>
   )) |>
   rename("VTM (SNOMED CT Code)" = vtm, "VMP (dm+d Code)" = vmp, "Last year" = `2024`) -> coreTable
 
+vtm_rows <- c(1, 5, 12)
+grand_totals <- coreTable |>
+  slice(vtm_rows) |>
+  summarise(across(c(`2019`, `Last year`, Total), \(x) sum(x, na.rm = TRUE)))
+
+fmt_count_pct <- function(count, denom) {
+  if_else(is.na(count), "",
+    if_else(is.na(denom) | denom == 0, format(round(count), big.mark = ",", trim = TRUE),
+      paste0(format(round(count), big.mark = ",", trim = TRUE), " (", round(100 * count / denom, 1), "%)")
+    ))
+}
+
+coreTable <- coreTable |>
+  mutate(
+    denom_2019 = grand_totals$`2019`[1],
+    denom_last = grand_totals$`Last year`[1],
+    denom_Total = grand_totals$Total[1]
+  ) |>
+  mutate(
+    `2019` = fmt_count_pct(`2019`, denom_2019),
+    `Last year` = fmt_count_pct(`Last year`, denom_last),
+    Total = fmt_count_pct(Total, denom_Total)
+  ) |>
+  select(-denom_2019, -denom_last, -denom_Total)
+
 ft <- coreTable |>
   flextable() |>
   bold(i = c(1, 5, 12)) |>
-  colformat_double(digits = 0, big.mark = ",") |>
   flextable::footnote(
     i = c(1, 5, 12, 1, 5, 12, 1, 5, 12), j = c(4, 4, 4, 5, 5, 5, 6, 6, 6),
     value = as_paragraph(c("Defined daily doses")),
@@ -75,6 +99,4 @@ ft <- coreTable |>
 
 print(ft)
 
-coreTable |>
-  mutate(across(c(`2019`, `Last year`, Total), \(x) if_else(is.na(x), "", format(round(x), big.mark = ",", trim = TRUE)))) |>
-  write_csv(here::here("outputs/Table1.csv"))
+write_csv(coreTable, here::here("outputs/Table1.csv"))
