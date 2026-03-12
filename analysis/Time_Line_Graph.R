@@ -51,10 +51,11 @@ cdk46Plot <- cdk46MonthlyData |>
   theme_classic() +
   scale_color_manual(values = BMJ_colours, 
                      breaks = c("Palbociclib", "Abemaciclib", "Ribociclib", "Total")) +
-  # Force x axis to show wider timeline, and better break points
+  # Force x axis to show wider timeline, and better break points (match quantile_plots.py)
   scale_x_date("Month",
                      limits = c(as.Date("2019-01-01"), as.Date("2025-01-01")), 
                      date_breaks = "1 year",
+                     date_minor_breaks = "1 month",
                      date_labels = "%Y",
                expand = expansion(mult = c(0, 0.02))
                ) +
@@ -71,10 +72,14 @@ cdk46Plot <- cdk46MonthlyData |>
   theme(legend.position = "bottom", 
         legend.title = element_blank(),
         legend.text = element_text(size = 12),
-        panel.grid.minor = element_blank(),
-        panel.grid.major.x = element_blank(),
+        panel.grid.major = element_line(colour = scales::alpha("grey", 0.5), linewidth = 0.5),
+        panel.grid.minor.x = element_line(colour = scales::alpha("grey", 0.3), linewidth = 0.3),
+        panel.grid.minor.y = element_blank(),
         panel.border = element_blank(),
-        axis.line = element_line(linewidth = 0.5, colour = "black"))
+        axis.line = element_line(linewidth = 0.5, colour = "black"),
+        axis.ticks.length.x = unit(0.15, "cm"),
+        axis.ticks.length.y = unit(0.1, "cm"),
+        axis.text = element_text(size = 12))
 
 # Add timeline markers and labels
 cdk46Plot <- cdk46Plot +
@@ -98,17 +103,17 @@ cdk46Plot <- cdk46Plot +
   geom_text(data=filter(KeyDates, text_pos == "left"), 
                aes(x=as.Date(date) - 65, y = marker, colour=VTM, 
                    label = stringr::str_wrap(event, 14)), 
-            size = 2.7, hjust = 1, show.legend = FALSE) +
+            size = 3.5, hjust = 1, show.legend = FALSE) +
   # plot all the right text
   geom_text(data=filter(KeyDates, text_pos == "right"), 
                aes(x=as.Date(date) + 65, y = marker, colour=VTM, 
                    label = stringr::str_wrap(event, 14)), 
-            size = 2.7, hjust = 0, show.legend = FALSE) +
+            size = 3.5, hjust = 0, show.legend = FALSE) +
   # plot all the above text
   geom_text(data=filter(KeyDates, text_pos == "above"), 
                aes(x=as.Date(date), y = marker+5000, colour=VTM, 
                    label = stringr::str_wrap(event, 14)), 
-            size = 2.7, hjust = 0.5, vjust = 0, show.legend = FALSE) +
+            size = 3.5, hjust = 0.5, vjust = 0, show.legend = FALSE) +
   # Redraw the lines so they are on top 
   geom_line(lwd=1.1)
 
