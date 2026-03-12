@@ -114,7 +114,7 @@ allPercentages <- ribociclib_pct |>
   left_join(abemaciclib_pct, by = "Cancer_Alliance")
 
 # Load shapefile and mapping for name corrections
-shp <- read_sf(here::here("data/map/Cancer_Alliances_July_2023_Boundaries/CAL_JUL_2023_EN_BFE.shp"))
+shp <- read_sf(here::here("data/CAL_JUL_2023_EN_BFE.shp"))
 shapefile_mapping <- read_csv(here::here("data/shapefile_cancer_alliance_mapping.csv"))
 
 # Map shapefile CAL23NM to trust_information names (for corrections and East of England merge)
