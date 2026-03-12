@@ -2,6 +2,7 @@ import pandas as pd
 from pathlib import Path
 
 DATA_DIR = Path("data")
+OUTPUT_DIR = Path("outputs")
 
 raw_data_path = DATA_DIR / "oph_data_11_25.csv"
 trust_information_path = DATA_DIR / "trust-information.csv"
@@ -99,7 +100,7 @@ if __name__ == "__main__":
             ],
         }
     )
-    trust_counts.to_csv(DATA_DIR / "trust_counts.csv", index=False)
+    trust_counts.to_csv(OUTPUT_DIR / "trust_counts.csv", index=False)
 
     excluded_data = raw_data[
         raw_data["Trust Code"].isin(unmapped_trusts | mapped_and_restricted)
@@ -116,7 +117,7 @@ if __name__ == "__main__":
         .reindex(columns=all_vtms, fill_value=0)
         .reset_index()
     )
-    excluded_summary.to_csv(DATA_DIR / "excluded_trusts_ddd.csv", index=False)
+    excluded_summary.to_csv(OUTPUT_DIR / "excluded_trusts_ddd.csv", index=False)
 
     processed = load_and_process_data(
         raw_data_path, trust_information_path
