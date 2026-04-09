@@ -278,8 +278,12 @@ def plot_quantiles(ax, quantiles: pd.DataFrame, trust_data: pd.DataFrame,
             if len(trust_subset) > 0:
                 ax.plot(
                     trust_subset['year_month'], trust_subset[pct_col],
-                    color=style['colour'], linewidth=1.2, linestyle='--',
-                    label=''
+                    color=style['colour'],
+                    linewidth=1.5,
+                    linestyle='--',
+                    gapcolor='white',
+                    dash_capstyle='round',
+                    label='',
                 )
     
     ax.set_ylim(0, 1.0)
