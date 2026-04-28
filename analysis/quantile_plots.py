@@ -20,6 +20,8 @@ def load_key_dates(data_path: Path) -> pd.DataFrame:
     """Load and prepare key dates from CSV file."""
     key_dates = pd.read_csv(data_path)
 
+    if 'include_time_series' in key_dates.columns:
+        key_dates = key_dates[key_dates['include_time_series']].copy()
 
     key_dates['date'] = key_dates['date'].astype(str).str.strip()
     key_dates['year_month'] = pd.to_datetime(key_dates['date'], format='%d/%m/%Y', errors='coerce')
@@ -193,7 +195,7 @@ def plot_quantiles(ax, quantiles: pd.DataFrame, trust_data: pd.DataFrame,
             y_horizontal_level = base_y_start - event['stagger'] * y_spacing
             
             if drug_name == "Palbociclib":
-                y_horizontal_level = 0.35
+                y_horizontal_level = 0.30
             
             if drug_name == "Abemaciclib":
                 event_date = event['year_month']
@@ -207,6 +209,9 @@ def plot_quantiles(ax, quantiles: pd.DataFrame, trust_data: pd.DataFrame,
                     y_horizontal_level = 0.95
                     event = event.copy()
                     event['position'] = 'left'
+                y_horizontal_level -= 0.05
+                if 'TA725' in str(event['label']):
+                    y_horizontal_level -= 0.08
             
             if drug_name == "Ribociclib" and 'OS data' in str(event['label']):
                 # Last ribociclib annotation (OS data): go right
@@ -214,7 +219,7 @@ def plot_quantiles(ax, quantiles: pd.DataFrame, trust_data: pd.DataFrame,
                 event['position'] = 'right'
             
             if drug_name == "Palbociclib" and 'OS data' in str(event['label']):
-                y_horizontal_level = 0.30
+                y_horizontal_level = 0.25
             if drug_name == "Palbociclib" and 'TA619' in str(event['label']):
                 # First palbociclib annotation: go right
                 event = event.copy()
@@ -244,7 +249,7 @@ def plot_quantiles(ax, quantiles: pd.DataFrame, trust_data: pd.DataFrame,
             if not go_left and x_line_end + pd.Timedelta(days=text_width_days) > x_max:
                 # Position label to the left of the line end if it would be cut off
                 x_line_end = min(x_line_end, x_max - pd.Timedelta(days=text_width_days + 10))
-            label = wrap_text(event['label'], max_chars=20)
+            label = event['label']
             
             y_label_center = y_horizontal_level
             
