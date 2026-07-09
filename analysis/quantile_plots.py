@@ -206,7 +206,7 @@ def plot_quantiles(ax, quantiles: pd.DataFrame, trust_data: pd.DataFrame,
                         y_horizontal_level = 0.85 - event['stagger'] * 0.05
                 # Last annotation (OS data May 2024): left and further up
                 if event_date >= pd.to_datetime("2024-01-01") and 'OS data' in str(event['label']):
-                    y_horizontal_level = 0.95
+                    y_horizontal_level = 0.89
                     event = event.copy()
                     event['position'] = 'left'
                 y_horizontal_level -= 0.05
