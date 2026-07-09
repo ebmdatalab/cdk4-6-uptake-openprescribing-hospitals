@@ -23,6 +23,19 @@ axisData <- expand_grid(
 keyDates |>
   mutate(date = as.Date(date, format="%d/%m/%Y")) |>
   mutate(VTM = factor(VTM, levels = c("Palbociclib", "Abemaciclib", "Ribociclib"))) |>
+  mutate(
+    event_label = case_when(
+      VTM == "Palbociclib" &
+        str_detect(event_label, "OS data") &
+        str_detect(event_label, "PALOMA-2") ~
+        "OS data published<br/>(PALOMA-2) (ns)<br/>(1st line)",
+      VTM == "Abemaciclib" &
+        str_detect(event_label, "OS data") &
+        str_detect(event_label, "MONARCH-3") ~
+        "OS data published<br/>(MONARCH-3) (ns)<br/>(1st line)",
+      TRUE ~ event_label
+    )
+  ) |>
   select(VTM, event_date = date, event_label, event_level, event_align) |>
 ggplot() +
   theme_void() +
