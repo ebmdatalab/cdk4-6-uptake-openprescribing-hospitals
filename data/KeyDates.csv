@@ -8,7 +8,7 @@ Abemaciclib,45000,right,Abemaciclib second line NICE,02/04/2019,NICE<br/>TA725<b
 Abemaciclib,92000,right,Abemaciclib adjuvant NICE,17/06/2022,NICE<br/>TA810<br/>(Adjuvant),-1,0.5,TRUE
 Abemaciclib,0,above,PFS data for MONARCH-3 Trial Published,02/10/2017,PFS data<br/>published<br/>(MONARCH-3)<br/>(1st line),1,0.5,TRUE
 Abemaciclib,30000,above,2 year IDFS data for monarchE trial published,20/09/2020,2-year IDFS data<br/>published<br/>(monarchE)<br/>(Adjuvant),-1,0.5,FALSE
-Abemaciclib,225000,right,Abemaciclib OS Data (first line),08/05/2024,OS data<br/>published<br/>(MONARCH-3)<br/>(ns)<br/>(1st line),1,0.5,TRUE
+Abemaciclib,190000,left,Abemaciclib OS Data (first line),08/05/2024,OS data<br/>published<br/>(MONARCH-3)<br/>(ns)<br/>(1st line),1,0.5,TRUE
 Ribociclib,65000,left,Ribociclib first line NICE,16/11/2017,NICE<br/>TA496<br/>(1st line),1,0.5,TRUE
 Ribociclib,40000,right,Ribociclib second line NICE,26/02/2021,NICE<br/>TA687<br/>(2nd line),-1,0.5,TRUE
 Ribociclib,0,above,PFS data for MONALEESA-2 trial published,03/11/2016,PFS data<br/>published<br/>(MONALEESA-2)<br/>(1st line),1,0.5,TRUE
