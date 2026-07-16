@@ -138,7 +138,7 @@
 <line x1='351.35' y1='264.47' x2='364.86' y2='264.47' style='stroke-width: 1.71; stroke: #FF83D6; stroke-dasharray: 15.93,6.83; stroke-linecap: butt;' />
 <line x1='244.11' y1='316.67' x2='257.62' y2='316.67' style='stroke-width: 1.71; stroke: #70FFF8; stroke-dasharray: 15.93,6.83; stroke-linecap: butt;' />
 <text x='102.95' y='46.28' style='font-size: 9.96px;fill: #2A6EBB; font-family: "Arial";' textLength='23.78px' lengthAdjust='spacingAndGlyphs'>NICE</text>
-<text x='98.15' y='58.19' style='font-size: 9.96px;fill: #2A6EBB; font-family: "Arial";' textLength='28.58px' lengthAdjust='spacingAndGlyphs'>TA619</text>
+<text x='94.28' y='58.19' style='font-size: 9.96px;fill: #2A6EBB; font-family: "Arial";' textLength='32.45px' lengthAdjust='spacingAndGlyphs'>TA619*</text>
 <text x='85.24' y='70.09' style='font-size: 9.96px;fill: #2A6EBB; font-family: "Arial";' textLength='19.91px' lengthAdjust='spacingAndGlyphs'>(2nd</text>
 <text x='107.92' y='70.09' style='font-size: 9.96px;fill: #2A6EBB; font-family: "Arial";' textLength='18.81px' lengthAdjust='spacingAndGlyphs'>line)</text>
 <text x='455.88' y='144.80' style='font-size: 9.96px;fill: #C50084; font-family: "Arial";' textLength='14.38px' lengthAdjust='spacingAndGlyphs'>OS</text>
@@ -166,7 +166,7 @@
 <text x='85.05' y='210.63' style='font-size: 9.96px;fill: #C50084; font-family: "Arial";' textLength='16.59px' lengthAdjust='spacingAndGlyphs'>(1st</text>
 <text x='104.41' y='210.63' style='font-size: 9.96px;fill: #C50084; font-family: "Arial";' textLength='18.81px' lengthAdjust='spacingAndGlyphs'>line)</text>
 <text x='101.95' y='302.26' style='font-size: 9.96px;fill: #C50084; font-family: "Arial";' textLength='23.78px' lengthAdjust='spacingAndGlyphs'>NICE</text>
-<text x='101.95' y='314.17' style='font-size: 9.96px;fill: #C50084; font-family: "Arial";' textLength='28.58px' lengthAdjust='spacingAndGlyphs'>TA725</text>
+<text x='101.95' y='314.17' style='font-size: 9.96px;fill: #C50084; font-family: "Arial";' textLength='32.45px' lengthAdjust='spacingAndGlyphs'>TA579*</text>
 <text x='101.95' y='326.08' style='font-size: 9.96px;fill: #C50084; font-family: "Arial";' textLength='19.91px' lengthAdjust='spacingAndGlyphs'>(2nd</text>
 <text x='124.62' y='326.08' style='font-size: 9.96px;fill: #C50084; font-family: "Arial";' textLength='18.81px' lengthAdjust='spacingAndGlyphs'>line)</text>
 <text x='365.99' y='255.08' style='font-size: 9.96px;fill: #C50084; font-family: "Arial";' textLength='23.78px' lengthAdjust='spacingAndGlyphs'>NICE</text>

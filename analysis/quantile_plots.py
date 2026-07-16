@@ -41,9 +41,12 @@ def load_key_dates(data_path: Path) -> pd.DataFrame:
     key_dates['label'] = key_dates['label'].astype(str).str.replace('<br/>', '\n', regex=False)
     # Remove HR from labels (TimeLineFigure and QuantilePlots don't show HR)
     key_dates['label'] = key_dates['label'].str.replace(r'HR [0-9.]+ \([0-9.-]+\)\n?', '', regex=True)
-    # Filter: date >= 2019 only (include all events)
+    # Keep events within the plotted window only
     min_date = pd.to_datetime("2019-01-01")
-    key_dates = key_dates[key_dates['year_month'] >= min_date].copy()
+    max_date = pd.to_datetime("2025-01-01")
+    key_dates = key_dates[
+        (key_dates['year_month'] >= min_date) & (key_dates['year_month'] < max_date)
+    ].copy()
     # Add stagger based on order within each drug
     key_dates = key_dates.sort_values(['drug', 'year_month'])
     key_dates['stagger'] = key_dates.groupby('drug').cumcount()
@@ -210,8 +213,8 @@ def plot_quantiles(ax, quantiles: pd.DataFrame, trust_data: pd.DataFrame,
                     event = event.copy()
                     event['position'] = 'left'
                 y_horizontal_level -= 0.05
-                if 'TA725' in str(event['label']):
-                    y_horizontal_level -= 0.08
+                if 'TA579' in str(event['label']):
+                    y_horizontal_level -= 0.12
             
             if drug_name == "Ribociclib" and 'OS data' in str(event['label']):
                 # Last ribociclib annotation (OS data): go right
