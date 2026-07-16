@@ -1,10 +1,10 @@
 VTM,marker,text_pos,event,date,event_label,event_level,event_align,include_time_series
 Palbociclib,300000,above,Palbociclib first line NICE,16/11/2017,NICE<br/>TA495<br/>(1st line),1,0.5,TRUE
-Palbociclib,300000,left,Palbociclib second line NICE,28/11/2019,NICE<br/>TA619<br/>(2nd line),-1,0.5,TRUE
+Palbociclib,300000,left,Palbociclib second line NICE,28/11/2019,NICE<br/>TA619*<br/>(2nd line),-1,0.5,TRUE
 Palbociclib,0,above,PFS data PALOMA-2 trial published,17/11/2016,PFS data<br/>published<br/>(PALOMA-2)<br/>(1st line),1,0.5,TRUE
 Palbociclib,300000,right,First line palbociclib survival data: HR 0.96 (0.78-1.18) ns,08/06/2022,OS data<br/>published<br/>(PALOMA-2)<br/>(ns)<br/>(1st line),1,0.5,TRUE
 Abemaciclib,160000,right,Abemaciclib first line NICE,17/01/2019,NICE<br/>TA563<br/>(1st line),1,0.5,TRUE
-Abemaciclib,45000,right,Abemaciclib second line NICE,02/04/2019,NICE<br/>TA579<br/>(2nd line),-1,0.5,TRUE
+Abemaciclib,45000,right,Abemaciclib second line NICE,02/04/2019,NICE<br/>TA579*<br/>(2nd line),-1,0.5,TRUE
 Abemaciclib,92000,right,Abemaciclib adjuvant NICE,17/06/2022,NICE<br/>TA810<br/>(Adjuvant),-1,0.5,TRUE
 Abemaciclib,0,above,PFS data for MONARCH-3 Trial Published,02/10/2017,PFS data<br/>published<br/>(MONARCH-3)<br/>(1st line),1,0.5,TRUE
 Abemaciclib,30000,above,2 year IDFS data for monarchE trial published,20/09/2020,2-year IDFS data<br/>published<br/>(monarchE)<br/>(Adjuvant),-1,0.5,FALSE
