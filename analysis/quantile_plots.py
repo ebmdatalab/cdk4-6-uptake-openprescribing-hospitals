@@ -58,16 +58,16 @@ EVENTS = pd.DataFrame()
 # Trusts to highlight
 HIGHLIGHT_TRUSTS = {
     "Abemaciclib": {
-        "RCB": {"colour": "#008000"},   # Dark green
-        "RXP": {"colour": "#FF6600"}   # Bright orange
+        "RCB": {"colour": "#008000", "legend_label": "Example NHS trust"},   # Dark green
+        "RXP": {"colour": "#FF6600", "legend_label": "Example NHS trust"}   # Bright orange
     },
     "Palbociclib": {
-        "RAJ": {"colour": "#008000"},
-        "R1H": {"colour": "#FF6600"}
+        "RAJ": {"colour": "#008000", "legend_label": "Example NHS trust"},
+        "R1H": {"colour": "#FF6600", "legend_label": "Example NHS trust"}
     },
     "Ribociclib": {
-        "RXP": {"colour": "#008000"},
-        "RCB": {"colour": "#FF6600"}
+        "RXP": {"colour": "#008000", "legend_label": "Example NHS trust"},
+        "RCB": {"colour": "#FF6600", "legend_label": "Example NHS trust"}
     }
 }
 
@@ -291,7 +291,7 @@ def plot_quantiles(ax, quantiles: pd.DataFrame, trust_data: pd.DataFrame,
                     linestyle='--',
                     gapcolor='white',
                     dash_capstyle='round',
-                    label='',
+                    label=style['legend_label'] if add_legend_labels else '',
                 )
     
     ax.set_ylim(0, 1.0)
@@ -374,7 +374,7 @@ def create_combined_plot(data_path: Path, output_dir: Path, key_dates_path: Path
     
     fig.legend(
         filtered_handles, filtered_labels,
-        loc='lower center', ncol=2, frameon=False,
+        loc='lower center', ncol=3, frameon=False,
         fontsize=9, bbox_to_anchor=(0.5, 0.02)
     )
     
