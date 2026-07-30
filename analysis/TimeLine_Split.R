@@ -3,6 +3,7 @@ require(tidyverse)
 require(ggplot2)
 require(ggh4x)
 require(ggtext)
+require(svglite)
 
 BMJ_colours_odd_even <- c(Palbociclib = "#2a6ebb", Abemaciclib = "#c50084", Ribociclib = "#00b2a9", 
   Palbociclib_1 = "#2a6ebb", Abemaciclib_1 = "#c50084", Ribociclib_1 = "#00b2a9", 

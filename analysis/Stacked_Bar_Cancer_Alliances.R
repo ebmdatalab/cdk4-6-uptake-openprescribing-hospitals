@@ -2,6 +2,7 @@ library(ggplot2)
 library(tidyverse)
 library(here)
 library(patchwork)
+library(svglite)
 
 cdk46Data <- readr::read_csv(here("data/oph_data_11_25_processed.csv")) |>
   mutate(Date = as.Date(Date))

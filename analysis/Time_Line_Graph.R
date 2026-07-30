@@ -6,6 +6,7 @@ require(here)
 require(scales)
 require(stringr)
 require(ggtext)
+require(svglite)
 
 # Define BMJ colour scheme
 BMJ_colours <- c("Palbociclib"="#2a6ebb", 
