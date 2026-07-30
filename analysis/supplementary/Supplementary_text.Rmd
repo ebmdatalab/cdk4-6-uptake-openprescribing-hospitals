@@ -1,6 +1,6 @@
 ---
 title: "Supplementary File"
-subtitle: "Open Hospital Prescribing - CDK4/6 Inhibitors"
+subtitle: "Variation in uptake and dose reduction of CDK4/6 inhibitors for the treatment of breast cancer in England, 2019–2024"
 output:
   bookdown::pdf_document2: 
     toc: true
@@ -190,68 +190,65 @@ ft #|>
 
 # Dispensing of Treatments
 
-## Summary of number of tablets or capsules of different formulations issued by calendar year.
+## Summary of defined daily doses of different formulations issued by calendar year.
 
 ```{r message=FALSE, warning=FALSE}
-# Get the dataset 
-# Requires cleaned data
-cdk46Data <- readRDS(here::here("data/cdk46_op_hosp_clean.RDS"))
+cdk46Data <- readr::read_csv(here::here("data/oph_data_11_25_processed.csv"), show_col_types = FALSE) |>
+  rename(
+    year_month = Date,
+    vmp_code = `VMP Code`,
+    vmp_name = `VMP Name`,
+    vtm_name = `VTM Name`,
+    trust_name = `Trust Name`,
+    ddd_quantity = Value
+  )
 
-cdk46Data|>
-  mutate(year = year(year_month))|>
-  rowwise()|>
-  mutate(vtm = stringr::str_split_1(as.character(vmp_name), " ")[1]) |>
-  mutate(vmp_short_name = paste(stringr::str_split_1(as.character(vmp_name), " ")[2:3], collapse=" ")) |>
-  filter(year < 2025)|>
+cdk46Data |>
+  mutate(year = year(year_month)) |>
+  mutate(vtm = vtm_name) |>
+  rowwise() |>
+  mutate(vmp_short_name = paste(stringr::str_split_1(as.character(vmp_name), " ")[2:3], collapse = " ")) |>
+  filter(year < 2025) |>
   group_by(vtm, vmp_short_name, vmp_code, year) |>
-  summarise(quantity = sum(quantity)) |>
+  summarise(quantity = sum(ddd_quantity), .groups = "drop") |>
   pivot_wider(names_from = year, values_from = quantity) |>
   mutate(vmp = paste0(vmp_short_name, " (", vmp_code, ")"), .after = vtm) |>
-  ungroup()|>
+  ungroup() |>
   select(-vmp_short_name, -vmp_code) |>
-  as_grouped_data( groups = c("vtm"), columns = NULL) %>%
+  as_grouped_data(groups = c("vtm"), columns = NULL) %>%
   flextable() |>
-  set_caption("Summary of number of tablets or capsules of different formulations issued by calendar year.") |>
-   flextable::footnote(i=c(6,8,10), j=c(2,2,2), 
-      value=as_paragraph(
-        c("Palbociclib capsules were phased out in January 2021")),
-      ref_symbols = c("a"), 
-      part = "body") |>
-      colformat_double(digits = 0) |>
-      font (fontname = "Arial Narrow", part="all") |>
-      fontsize(size=10, part = "all")|>
-      # dim_pretty(unit="cm")
-      width(width=c(1, 5.5, 1.65, 1.65, 1.65, 1.65, 1.65, 1.65) , unit="cm")|>
-      add_header_row(values=c("Virtual Medicinal Product", "Calendar Year"), colwidths = c(2, 6))
-      
-
-  
-
-
+  set_caption("Summary of defined daily doses of different formulations issued by calendar year.") |>
+  flextable::footnote(
+    i = c(6, 8, 10), j = c(2, 2, 2),
+    value = as_paragraph(c("Palbociclib capsules were phased out in January 2021")),
+    ref_symbols = c("a"),
+    part = "body"
+  ) |>
+  colformat_double(digits = 0) |>
+  font(fontname = "Arial Narrow", part = "all") |>
+  fontsize(size = 10, part = "all") |>
+  width(width = c(1, 5.5, 1.65, 1.65, 1.65, 1.65, 1.65, 1.65), unit = "cm") |>
+  add_header_row(values = c("Virtual Medicinal Product", "Calendar Year"), colwidths = c(2, 6))
 ```
-## Summary of Defined Daily Doses by VMP
-```{r}
 
-cdk46Data|>
-  mutate(year = year(year_month))|>
-  rowwise()|>
-  mutate(vtm = stringr::str_split_1(as.character(vmp_name), " ")[1]) |>
-  mutate(vmp_short_name = paste(stringr::str_split_1(as.character(vmp_name), " ")[2:3], collapse=" ")) |>
-  filter(year < 2025)|>
+## Summary of Defined Daily Doses by VTM
+
+```{r}
+cdk46Data |>
+  mutate(year = year(year_month)) |>
+  mutate(vtm = vtm_name) |>
+  filter(year < 2025) |>
   group_by(vtm, year) |>
-  summarise(quantity = sum(ddd_quantity)) |>
+  summarise(quantity = sum(ddd_quantity), .groups = "drop") |>
   pivot_wider(names_from = year, values_from = quantity) |>
-  ungroup()|>
-  as_grouped_data( groups = c("vtm"), columns = NULL) %>%
+  ungroup() |>
+  as_grouped_data(groups = c("vtm"), columns = NULL) %>%
   flextable() |>
   set_caption("Summary of number of defined daily doses issued by calendar year.") |>
-      colformat_double(digits = 0) |>
-      font (fontname = "Arial Narrow", part="all") |>
-      fontsize(size=10, part = "all") #|>
-   
-
+  colformat_double(digits = 0) |>
+  font(fontname = "Arial Narrow", part = "all") |>
+  fontsize(size = 10, part = "all")
 ```
-
 
 \pagebreak
 
@@ -259,49 +256,41 @@ cdk46Data|>
 
 ```{r}
 cdk46Data |>
-  filter(year_month < as.Date("2025-01-01"))|>
-  group_by(`Cancer Alliance` = as.character(Alliance_name), `NHS Trust` = as.character(Trust_name)) |>
-  summarise(`No of CDK4/6 tablets/capsules dispensed` = sum(quantity)) |>
-  ungroup()|>
- as_grouped_data( groups = c("Cancer Alliance"), columns = NULL) |>
+  filter(year_month < as.Date("2025-01-01")) |>
+  group_by(
+    `Cancer Alliance` = as.character(Cancer_Alliance),
+    `NHS Trust` = as.character(trust_name)
+  ) |>
+  summarise(`No of CDK4/6 DDDs issued` = sum(ddd_quantity), .groups = "drop") |>
+  ungroup() |>
+  as_grouped_data(groups = c("Cancer Alliance"), columns = NULL) |>
   flextable() |>
-       colformat_double(digits = 0) |>
-      font (fontname = "Arial Narrow", part="all") |>
-      fontsize(size=10, part = "all")|>
-      # dim_pretty(unit="cm")
-      width(width=c(5,8, 3) , unit="cm") |>
-    set_caption("List of NHS Trusts, by Cancer Alliance and total number of tablets or capsules of any CDK 4/6 inhibitor dispensed between 2019 and 2024.") 
-
-
+  colformat_double(digits = 0) |>
+  font(fontname = "Arial Narrow", part = "all") |>
+  fontsize(size = 10, part = "all") |>
+  width(width = c(5, 8, 3), unit = "cm") |>
+  set_caption("List of NHS Trusts, by Cancer Alliance and total defined daily doses of any CDK4/6 inhibitor issued between 2019 and 2024.")
 ```
 
 \pagebreak
 
-
-
 # Change in Prescribing
-The ratio of palbociclib to ribociclib prescribed by Cancer Alliance changed for every Alliance when comparing July-Decemeber 2021 to January-June 2024.  The change for each Alliance is tabulated below:
+The ratio of palbociclib to ribociclib prescribed by Cancer Alliance changed for every Alliance when comparing July-December 2021 to January-June 2024. The change for each Alliance is tabulated below:
 
 ```{r}
-# This is calculated in the Map_plots.Rmd and simply imported here
-
-change_table <- readRDS(here::here("r/r-notebook/change_table.RDS"))
+change_table <- readRDS(here::here("analysis/supplementary/change_table.RDS"))
 
 change_table
-
 ```
 
 # R Packages
 
 ```{r}
-cite_packages(output="paragraph", out.dir =here::here("r/r-notebook")) #|>
-  # flextable() |>
-  # ftExtra::colformat_md()
+cite_packages(output = "paragraph", out.dir = here::here("analysis/supplementary"))
 ```
 
-
 ```{r}
-#nocite_references(cite_packages(output="citekeys", out.dir =here::here("r/r-notebook")))
+#nocite_references(cite_packages(output="citekeys", out.dir = here::here("analysis/supplementary")))
 ```
 
 # Supplemental References
