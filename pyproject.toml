@@ -1,7 +1,7 @@
 [project]
 name = "op-hospitals-cdk46"
 version = "0.1.0"
-description = "Analysis of CDK4/6 inhibitors issue in hospitals in England"
+description = "Variation in uptake and dose reduction of CDK4/6 inhibitors for breast cancer in England, 2019–2024 (OpenPrescribing Hospitals)"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

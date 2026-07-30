@@ -1,45 +1,59 @@
-# Trends and variation in the issuing of CDK4/6 inhibitors within NHS Trusts in England
+# Variation in uptake and dose reduction of CDK4/6 inhibitors for the treatment of breast cancer in England, 2019–2024: a descriptive observational study using OpenPrescribing Hospitals
 
-This project examines the uptake of CDK4/6 inhibitors (palbociclib, ribociclib, and abemaciclib) within NHS Trusts in England, including the frequency of dose reductions, and assesses variation in their use both within NHS trusts and across cancer alliances in response to recent approvals and emerging evidence.
+Analysis code and outputs for a descriptive observational study of CDK4/6 inhibitor (palbociclib, ribociclib, and abemaciclib) uptake and dose reduction in NHS trusts in England, using OpenPrescribing Hospitals.
 
-## Data Sources
+## Data sources
 
-This project makes use of the **Secondary Care Medicines Dataset (SCMD)** hosted by the NHS Business Services Authority. The SCMD contains processed pharmacy stock data from all NHS trusts in England, including cancer therapies. The data is accessed through the publicly available [OpenPrescribing Hospitals platform](https://hospitals.openprescribing.net/).
+This project uses the **Secondary Care Medicines Dataset (SCMD)** from the NHS Business Services Authority, accessed via [OpenPrescribing Hospitals](https://hospitals.openprescribing.net/).
 
-## Project Structure
+## Project structure
 
-This project uses both Python and R for data analysis.
-
-- `data/`: Contains processed datasets including hospital-level CDK4/6 inhibitor data, cancer alliance boundaries, and key dates
-- `r/`: R scripts and notebooks for data analysis, visualization, and report generation
-  - `r/functions/`: Utility functions (e.g., ODS API access)
-  - `r/r-notebook/`: R Markdown notebooks for various analyses
-  - `r/outputs/`: Generated figures and tables
-- `python/`: Python scripts and notebooks for data analysis
-- `pyproject.toml`: Python project configuration and dependencies
-
+- `data/` — processed hospital CDK4/6 data, trust/cancer alliance lookups, and key dates
+- `analysis/` — Python and R analysis scripts that produce the paper figures and tables
+- `outputs/` — generated figures (PNG/SVG) and tables (CSV)
+- `pyproject.toml` / `uv.lock` — Python dependencies (managed with [uv](https://github.com/astral-sh/uv))
+- `renv.lock` — R dependencies (managed with [renv](https://rstudio.github.io/renv/))
 
 ## Usage
 
- The main analyses are conducted in R Markdown notebooks located in `r/r-notebook/`, which generate visualizations and reports examining:
+Install Python dependencies with uv:
 
-- Temporal trends in CDK4/6 inhibitor usage
-- Dose reduction patterns
-- Geographic variation across cancer alliances
-- Quantile plots showing distribution of usage
-- Event timelines related to approvals and evidence
+```bash
+uv sync
+```
 
-## Outputs
+Install R dependencies with renv (from the project root in R):
 
-Generated outputs include:
-- Timeline figures showing uptake over time
-- Map visualizations of geographic variation
-- Quantile plots showing distribution patterns
-- Dose reduction analyses
-- Statistical tables (Table 2)
+```r
+renv::restore()
+```
 
-All outputs are saved in `r/outputs/` in both PNG and SVG formats.
+Or open `op-hospitals-cdk46.Rproj` in RStudio, which activates renv via `.Rprofile`, then run `renv::restore()`.
 
-## References
+Process the raw OpenPrescribing Hospitals extract:
 
-This research contributes to understanding variation in the adoption of novel cancer treatments within the NHS and supports efforts to ensure rapid, widespread, and equitable uptake of effective therapies.
+```bash
+uv run python analysis/process_data.py
+```
+
+This writes:
+
+- `data/oph_data_11_25_processed.csv` — analysis-ready extract
+- `outputs/excluded_trusts_ddd.csv` — DDDs for trusts excluded from analysis
+- `outputs/trust_counts.csv` — counts of trusts mapped / unmapped / excluded
+
+Main figure and table scripts:
+
+| Script | Outputs |
+|--------|---------|
+| `analysis/Time_Line_Graph.R` | `outputs/TimeLineFigure.png`, `.svg` |
+| `analysis/TimeLine_Split.R` | `outputs/EventTimeLineSplit.png`, `.svg` |
+| `analysis/Dose_Reductions.R` | `outputs/DoseReductions.png`, `.svg` |
+| `analysis/quantile_plots.py` | `outputs/QuantilePlots_combined.png`, `.svg`; `outputs/QuantilePlots_data.csv` |
+| `analysis/Stacked_Bar_Cancer_Alliances.R` | `outputs/Cancer_Alliance_Stacked_Bar.png`, `.svg`; `outputs/Cancer_Alliance_Percentages_2021.csv`; `outputs/Cancer_Alliance_Percentages_2024.csv`; `outputs/Cancer_Alliance_Percentages_Change_2021_2024.csv` |
+| `analysis/Create_Table1.R` | `outputs/Table1.csv` |
+| `analysis/trust_cancer_alliance_table.py` | `outputs/trust_cancer_alliance_cdk46_ddds_2019_2024.csv` |
+
+## Licence
+
+MIT — see [LICENCE.txt](LICENCE.txt).
