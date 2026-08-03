@@ -185,6 +185,8 @@
 <polyline points='99.57,354.60 100.29,355.85 101.01,354.60 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='395.51' y1='355.85' x2='395.51' y2='341.89' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <polyline points='394.79,354.60 395.51,355.85 396.23,354.60 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='504.86' y1='367.81' x2='504.86' y2='381.76' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='505.58,369.05 504.86,367.81 504.14,369.05 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <text x='145.57' y='313.99' style='font-size: 9.96px; font-family: "Arial";' textLength='23.78px' lengthAdjust='spacingAndGlyphs'>NICE</text>
 <text x='143.17' y='325.90' style='font-size: 9.96px; font-family: "Arial";' textLength='28.58px' lengthAdjust='spacingAndGlyphs'>TA496</text>
 <text x='138.37' y='337.80' style='font-size: 9.96px; font-family: "Arial";' textLength='16.59px' lengthAdjust='spacingAndGlyphs'>(1st</text>
@@ -205,6 +207,12 @@
 <text x='356.80' y='325.90' style='font-size: 9.96px; font-family: "Arial";' textLength='77.42px' lengthAdjust='spacingAndGlyphs'>(MONALEESA-2)</text>
 <text x='376.43' y='337.80' style='font-size: 9.96px; font-family: "Arial";' textLength='16.59px' lengthAdjust='spacingAndGlyphs'>(1st</text>
 <text x='395.78' y='337.80' style='font-size: 9.96px; font-family: "Arial";' textLength='18.81px' lengthAdjust='spacingAndGlyphs'>line)</text>
+<text x='429.09' y='390.88' style='font-size: 9.96px; font-family: "Arial";' textLength='28.20px' lengthAdjust='spacingAndGlyphs'>3-year</text>
+<text x='460.06' y='390.88' style='font-size: 9.96px; font-family: "Arial";' textLength='22.67px' lengthAdjust='spacingAndGlyphs'>IDFS</text>
+<text x='485.50' y='390.88' style='font-size: 9.96px; font-family: "Arial";' textLength='19.36px' lengthAdjust='spacingAndGlyphs'>data</text>
+<text x='462.25' y='402.79' style='font-size: 9.96px; font-family: "Arial";' textLength='42.61px' lengthAdjust='spacingAndGlyphs'>published</text>
+<text x='454.34' y='414.69' style='font-size: 9.96px; font-family: "Arial";' textLength='50.52px' lengthAdjust='spacingAndGlyphs'>(NATALEE)</text>
+<text x='459.50' y='426.60' style='font-size: 9.96px; font-family: "Arial";' textLength='45.36px' lengthAdjust='spacingAndGlyphs'>(Adjuvant)</text>
 </g>
 <g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHw0MzIuMDA=)'>
 </g>

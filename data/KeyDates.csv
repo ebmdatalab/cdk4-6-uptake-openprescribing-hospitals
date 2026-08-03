@@ -13,4 +13,5 @@ Ribociclib,65000,left,Ribociclib first line NICE,16/11/2017,NICE<br/>TA496<br/>(
 Ribociclib,40000,right,Ribociclib second line NICE,26/02/2021,NICE<br/>TA687<br/>(2nd line),-1,0.5,TRUE
 Ribociclib,0,above,PFS data for MONALEESA-2 trial published,03/11/2016,PFS data<br/>published<br/>(MONALEESA-2)<br/>(1st line),1,0.5,TRUE
 Ribociclib,80000,left,First line ribociclib survival data: HR 0.76 (0.63-0.93),09/03/2022,OS data<br/>published<br/>(MONALEESA-2)<br/>(1st line),1,0.5,TRUE
+Ribociclib,0,left,NATALEE 3-year IDFS data published,01/03/2024,3-year IDFS data<br/>published<br/>(NATALEE)<br/>(Adjuvant),-1,1,FALSE
 Ribociclib,80000,right,Ribociclib adjuvant NICE,06/08/2025,NICE<br/>TA1086<br/>(Adjuvant),-1,0.5,TRUE
