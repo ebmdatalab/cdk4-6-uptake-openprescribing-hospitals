@@ -2,6 +2,8 @@
 
 Analysis code and outputs for a descriptive observational study of CDK4/6 inhibitor (palbociclib, ribociclib, and abemaciclib) uptake and dose reduction in NHS trusts in England, using OpenPrescribing Hospitals.
 
+**Preprint:** [medRxiv](https://doi.org/10.64898/2026.08.05.26359678)
+
 ## Data sources
 
 This project uses the **Secondary Care Medicines Dataset (SCMD)** from the NHS Business Services Authority, accessed via [OpenPrescribing Hospitals](https://hospitals.openprescribing.net/).
