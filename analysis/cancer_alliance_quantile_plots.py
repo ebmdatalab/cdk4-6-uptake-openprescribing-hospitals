@@ -13,6 +13,40 @@ DRUGS = [
     ("Ribociclib", "pct_ribo", "% ribociclib"),
 ]
 
+# Cancer alliances to highlight
+HIGHLIGHT_CANCER_ALLIANCES = {
+    "Palbociclib": {
+        "Humber & North Yorkshire Cancer Alliance": {
+            "colour": "#008000",
+            "legend_label": "Example cancer alliance",
+        },
+        "South East London Cancer Alliance": {
+            "colour": "#FF6600",
+            "legend_label": "Example cancer alliance",
+        },
+    },
+    "Abemaciclib": {
+        "South East London Cancer Alliance": {
+            "colour": "#008000",
+            "legend_label": "Example cancer alliance",
+        },
+        "West Yorkshire and Harrogate Cancer Alliance": {
+            "colour": "#FF6600",
+            "legend_label": "Example cancer alliance",
+        },
+    },
+    "Ribociclib": {
+        "Northern Cancer Alliance": {
+            "colour": "#008000",
+            "legend_label": "Example cancer alliance",
+        },
+        "East Midlands Cancer Alliance": {
+            "colour": "#FF6600",
+            "legend_label": "Example cancer alliance",
+        },
+    },
+}
+
 
 def load_alliance_shares(data_path: Path) -> pd.DataFrame:
     cdk46 = pd.read_csv(data_path, parse_dates=["Date"])
@@ -70,6 +104,7 @@ def write_quantile_table(quantiles_by_drug: list[tuple[str, pd.DataFrame]], outp
 def create_alliance_plot(data_path: Path, output_dir: Path, key_dates_path: Path) -> None:
     alliance_data = load_alliance_shares(data_path)
     qp.EVENTS = qp.load_key_dates(key_dates_path)
+    qp.HIGHLIGHT_TRUSTS = HIGHLIGHT_CANCER_ALLIANCES
 
     quantiles_by_drug = [
         (drug_name, qp.calculate_quantiles(alliance_data, pct_col))
@@ -112,7 +147,7 @@ def create_alliance_plot(data_path: Path, output_dir: Path, key_dates_path: Path
         [handle for handle, _ in filtered],
         [label for _, label in filtered],
         loc="lower center",
-        ncol=2,
+        ncol=3,
         frameon=False,
         fontsize=9,
         bbox_to_anchor=(0.5, 0.02),
