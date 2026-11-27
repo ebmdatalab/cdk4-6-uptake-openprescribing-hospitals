@@ -52,6 +52,7 @@ Main figure and table scripts:
 | `analysis/TimeLine_Split.R` | `outputs/EventTimeLineSplit.png`, `.svg` |
 | `analysis/Dose_Reductions.R` | `outputs/DoseReductions.png`, `.svg` |
 | `analysis/quantile_plots.py` | `outputs/QuantilePlots_combined.png`, `.svg`; `outputs/QuantilePlots_data.csv` |
+| `analysis/cancer_alliance_quantile_plots.py` | `outputs/QuantilePlots_cancer_alliances.png`, `.svg`; `outputs/QuantilePlots_cancer_alliances_data.csv` |
 | `analysis/Stacked_Bar_Cancer_Alliances.R` | `outputs/Cancer_Alliance_Stacked_Bar.png`, `.svg`; `outputs/Cancer_Alliance_Percentages_2021.csv`; `outputs/Cancer_Alliance_Percentages_2024.csv`; `outputs/Cancer_Alliance_Percentages_Change_2021_2024.csv` |
 | `analysis/Create_Table1.R` | `outputs/Table1.csv` |
 | `analysis/trust_cancer_alliance_table.py` | `outputs/trust_cancer_alliance_cdk46_ddds_2019_2024.csv` |
